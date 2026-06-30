@@ -10,4 +10,10 @@ async function createAdmin(adminData) {
   );
 }
 
-export { createAdmin };
+async function loginAdmin(adminData) {
+  return await axios.post("http://localhost:3000/api/admin/login", adminData, {
+    withCredentials: true,
+  });
+}
+
+export { createAdmin, loginAdmin };

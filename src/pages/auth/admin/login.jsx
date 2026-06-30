@@ -1,6 +1,38 @@
 import "../../../css/auth-layout.css";
+import { useState } from "react";
+import { loginAdmin } from "../../../services/adminService";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminLogin() {
+  const navigate = useNavigate();
+
+  let [formData, setFormData] = useState({
+    name: "",
+    password: "",
+  });
+
+  function handleFormData(e) {
+    setFormData((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+  }
+
+  async function onsubmit(e) {
+    e.preventDefault();
+    try {
+      const response = await loginAdmin(formData);
+      if (response.data.success) {
+        navigate("/admin/dashboard");
+      }
+    } catch (err) {
+      console.log("error", err);
+      setFormData({
+        name: "",
+        password: "",
+      });
+    }
+  }
+
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -13,12 +45,22 @@ export default function AdminLogin() {
             Create a account? <a href="/admin/signup">Sign up</a>
           </p>
 
-          <form className="auth-form">
+          <form className="auth-form" onSubmit={onsubmit}>
             <label>Email</label>
-            <input type="email" placeholder="example@gmail.com" />
+            <input
+              type="email"
+              placeholder="example@gmail.com"
+              name="email"
+              onChange={(e) => handleFormData(e)}
+            />
 
             <label>Password</label>
-            <input type="password" placeholder="********" />
+            <input
+              type="password"
+              placeholder="********"
+              name="password"
+              onChange={(e) => handleFormData(e)}
+            />
             <br />
             <button className="signup-btn">Create Account</button>
 
