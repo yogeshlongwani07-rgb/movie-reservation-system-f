@@ -4,6 +4,7 @@ import AdminSignup from "../pages/auth/admin/signup";
 import UserLogin from "../pages/auth/user/login";
 import UserSignup from "../pages/auth/user/signup";
 import NotFound from "../pages/NotFound";
+import AdminDashboard from "../pages/admin/dashboard";
 
 export default function Router() {
   return (
@@ -13,6 +14,7 @@ export default function Router() {
         <Route path="/admin/signup" element={<AdminSignup />}></Route>
         <Route path="/user/login" element={<UserLogin />}></Route>
         <Route path="/user/signup" element={<UserSignup />}></Route>
+        <Route path="/admin/dashboard" element={<AdminDashboard />}></Route>
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>

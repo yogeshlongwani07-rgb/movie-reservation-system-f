@@ -1,6 +1,44 @@
 import "../../../css/auth-layout.css";
+import { useState } from "react";
+import { createAdmin } from "../../../services/adminService";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminSignup() {
+  const navigate = useNavigate();
+  let [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "admin",
+    passkey: "helloworld",
+  });
+
+  function handleFormData(e) {
+    setFormData((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+  }
+
+  async function onsubmit(e) {
+    e.preventDefault();
+    try {
+      const response = await createAdmin(formData);
+      console.log("Success:", response.data.success);
+      if (response.data.success) {
+        navigate("/admin/dashboard");
+      }
+      console.log("Success:", response.data.success);
+    } catch (err) {
+      console.log("Error:", err);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        role: "admin",
+        passkey: "helloworld",
+      });
+    }
+  }
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -13,19 +51,37 @@ export default function AdminSignup() {
             Already have an account? <a href="/admin/login">Sign In</a>
           </p>
 
-          <form className="auth-form">
-            <label>Full Name</label>
-            <input type="text" placeholder="John Doe" />
+          <form className="auth-form" onSubmit={onsubmit}>
+            <label>Name</label>
+            <input
+              type="text"
+              placeholder="John Doe"
+              value={formData.name}
+              name="name"
+              onChange={(e) => handleFormData(e)}
+            />
 
             <label>Email</label>
-            <input type="email" placeholder="example@gmail.com" />
+            <input
+              type="email"
+              placeholder="example@gmail.com"
+              name="email"
+              value={formData.email}
+              onChange={(e) => handleFormData(e)}
+            />
 
             <label>Password</label>
-            <input type="password" placeholder="********" />
+            <input
+              type="password"
+              placeholder="********"
+              name="password"
+              value={formData.password}
+              onChange={(e) => handleFormData(e)}
+            />
             <br />
             <button className="signup-btn">Create Account</button>
 
-            <div className="divider">
+            {/* <div className="divider">
               <span></span>
               <p>OR</p>
               <span></span>
@@ -33,10 +89,10 @@ export default function AdminSignup() {
             <button className="social-btn">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
-                alt=""
+                alt="google-logo"
               />
               Continue with Google
-            </button>
+            </button> */}
           </form>
         </div>
         <div className="auth-right">

@@ -1,7 +1,7 @@
-export default function AdminHome() {
+export default function AdminDashboard() {
   return (
     <>
-      <h1>User Home</h1>
+      <h1>User Dashboard</h1>
     </>
   );
 }
