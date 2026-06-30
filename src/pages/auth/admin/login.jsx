@@ -7,7 +7,7 @@ export default function AdminLogin() {
   const navigate = useNavigate();
 
   let [formData, setFormData] = useState({
-    name: "",
+    email: "",
     password: "",
   });
 
@@ -63,7 +63,7 @@ export default function AdminLogin() {
             />
             <br />
             <button className="signup-btn">Create Account</button>
-
+            {/* 
             <div className="divider">
               <span></span>
               <p>OR</p>
@@ -75,7 +75,7 @@ export default function AdminLogin() {
                 alt=""
               />
               Continue with Google
-            </button>
+            </button> */}
           </form>
         </div>
         <div className="auth-right">

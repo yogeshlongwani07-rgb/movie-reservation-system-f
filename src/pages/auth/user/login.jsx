@@ -1,6 +1,36 @@
 import "../../../css/auth-layout.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../../services/userServices";
 
 export default function UserLogin() {
+  const navigate = useNavigate();
+  let [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  function handleFormData(e) {
+    setFormData((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    try {
+      const response = await loginUser(formData);
+      console.log(response);
+      navigate("/user/dashboard");
+    } catch (err) {
+      console.log("error", err);
+      setFormData({
+        email: "",
+        password: "",
+      });
+    }
+  }
+
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -13,15 +43,24 @@ export default function UserLogin() {
             Create a account? <a href="/user/signup">Sign up</a>
           </p>
 
-          <form className="auth-form">
+          <form className="auth-form" onSubmit={onSubmit}>
             <label>Email</label>
-            <input type="email" placeholder="example@gmail.com" />
-
+            <input
+              type="email"
+              placeholder="example@gmail.com"
+              name="email"
+              onChange={(e) => handleFormData(e)}
+            />
             <label>Password</label>
-            <input type="password" placeholder="********" />
+            <input
+              type="password"
+              placeholder="********"
+              name="password"
+              onChange={(e) => handleFormData(e)}
+            />
             <br />
             <button className="signup-btn">Create Account</button>
-
+            {/* 
             <div className="divider">
               <span></span>
               <p>OR</p>
@@ -33,7 +72,7 @@ export default function UserLogin() {
                 alt=""
               />
               Continue with Google
-            </button>
+            </button> */}
           </form>
         </div>
         <div className="auth-right">
