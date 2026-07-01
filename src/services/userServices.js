@@ -1,15 +1,11 @@
-import axios from "axios";
+import api from "./api";
 
 async function createUser(userData) {
-  return await axios.post("http://localhost:3000/api/user/register", userData, {
-    withCredentials: true,
-  });
+  return await api.post("/user/register", userData);
 }
 
 async function loginUser(userData) {
-  return await axios.post("http://localhost:3000/api/user/login", userData, {
-    withCredentials: true,
-  });
+  return await api.post("/user/login", userData);
 }
 
 export { createUser, loginUser };

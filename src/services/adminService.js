@@ -1,19 +1,11 @@
-import axios from "axios";
+import api from "./api";
 
 async function createAdmin(adminData) {
-  return await axios.post(
-    "http://localhost:3000/api/admin/register",
-    adminData,
-    {
-      withCredentials: true,
-    },
-  );
+  return await api.post("/admin/register", adminData);
 }
 
 async function loginAdmin(adminData) {
-  return await axios.post("http://localhost:3000/api/admin/login", adminData, {
-    withCredentials: true,
-  });
+  return await api.post("/admin/login", adminData);
 }
 
 export { createAdmin, loginAdmin };
