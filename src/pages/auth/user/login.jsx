@@ -21,7 +21,9 @@ export default function UserLogin() {
     try {
       const response = await loginUser(formData);
       console.log(response);
-      navigate("/user/dashboard");
+      if (response.data.success) {
+        navigate("/user/dashboard");
+      }
     } catch (err) {
       console.log("error", err);
       setFormData({
@@ -49,6 +51,7 @@ export default function UserLogin() {
               type="email"
               placeholder="example@gmail.com"
               name="email"
+              value={formData.email}
               onChange={(e) => handleFormData(e)}
             />
             <label>Password</label>
@@ -56,6 +59,7 @@ export default function UserLogin() {
               type="password"
               placeholder="********"
               name="password"
+              value={formData.password}
               onChange={(e) => handleFormData(e)}
             />
             <br />

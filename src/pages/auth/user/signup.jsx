@@ -58,6 +58,7 @@ export default function UserSignup() {
             <label>Email</label>
             <input
               type="email"
+              value={formData.email}
               placeholder="example@gmail.com"
               name="email"
               onChange={(e) => handleFormData(e)}
@@ -67,6 +68,7 @@ export default function UserSignup() {
             <input
               type="password"
               placeholder="********"
+              value={formData.password}
               name="password"
               onChange={(e) => handleFormData(e)}
             />

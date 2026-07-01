@@ -23,11 +23,10 @@ export default function AdminSignup() {
     e.preventDefault();
     try {
       const response = await createAdmin(formData);
-      console.log("Success:", response.data.success);
+      console.log("Success:", response);
       if (response.data.success) {
         navigate("/admin/dashboard");
       }
-      console.log("Success:", response.data.success);
     } catch (err) {
       console.log("Error:", err);
       setFormData({
@@ -79,7 +78,9 @@ export default function AdminSignup() {
               onChange={(e) => handleFormData(e)}
             />
             <br />
-            <button className="signup-btn">Create Account</button>
+            <button className="signup-btn" type="submit">
+              Create Account
+            </button>
 
             {/* <div className="divider">
               <span></span>

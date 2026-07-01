@@ -2,6 +2,7 @@ import "../../../css/auth-layout.css";
 import { useState } from "react";
 import { loginAdmin } from "../../../services/adminService";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export default function AdminLogin() {
     } catch (err) {
       console.log("error", err);
       setFormData({
-        name: "",
+        email: "",
         password: "",
       });
     }
@@ -49,6 +50,7 @@ export default function AdminLogin() {
             <label>Email</label>
             <input
               type="email"
+              value={formData.email}
               placeholder="example@gmail.com"
               name="email"
               onChange={(e) => handleFormData(e)}
@@ -57,6 +59,7 @@ export default function AdminLogin() {
             <label>Password</label>
             <input
               type="password"
+              value={formData.password}
               placeholder="********"
               name="password"
               onChange={(e) => handleFormData(e)}
