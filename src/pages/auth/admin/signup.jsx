@@ -1,7 +1,8 @@
 import "../../../css/auth-layout.css";
 import { useState } from "react";
-import { createAdmin } from "../../../services/adminService";
+import { create } from "../../../services/authService";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function AdminSignup() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function AdminSignup() {
   async function onsubmit(e) {
     e.preventDefault();
     try {
-      const response = await createAdmin(formData);
+      const response = await create(formData, "admin");
       console.log("Success:", response);
       if (response.data.success) {
         navigate("/admin/dashboard");
@@ -47,7 +48,7 @@ export default function AdminSignup() {
           <h1>Admin Sign Up</h1>
 
           <p className="subtitle">
-            Already have an account? <a href="/admin/login">Sign In</a>
+            Already have an account? <Link to="/admin/login">Sign In</Link>
           </p>
 
           <form className="auth-form" onSubmit={onsubmit}>

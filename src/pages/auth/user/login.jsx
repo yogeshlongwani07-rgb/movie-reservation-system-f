@@ -1,7 +1,8 @@
 import "../../../css/auth-layout.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../../services/userServices";
+import { validate } from "../../../services/authService";
+import { Link } from "react-router-dom";
 
 export default function UserLogin() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function UserLogin() {
   async function onSubmit(e) {
     e.preventDefault();
     try {
-      const response = await loginUser(formData);
+      const response = await validate(formData, "user");
       console.log(response);
       if (response.data.success) {
         navigate("/user/dashboard");
@@ -42,7 +43,7 @@ export default function UserLogin() {
           <h1>User Login</h1>
 
           <p className="subtitle">
-            Create a account? <a href="/user/signup">Sign up</a>
+            Create a account? <Link to="/user/signup">Sign up</Link>
           </p>
 
           <form className="auth-form" onSubmit={onSubmit}>

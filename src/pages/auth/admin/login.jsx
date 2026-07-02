@@ -1,6 +1,6 @@
 import "../../../css/auth-layout.css";
 import { useState } from "react";
-import { loginAdmin } from "../../../services/adminService";
+import { validate } from "../../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -21,7 +21,7 @@ export default function AdminLogin() {
   async function onsubmit(e) {
     e.preventDefault();
     try {
-      const response = await loginAdmin(formData);
+      const response = await validate(formData, "admin");
       if (response.data.success) {
         navigate("/admin/dashboard");
       }
@@ -43,7 +43,7 @@ export default function AdminLogin() {
           <h1>Admin Login</h1>
 
           <p className="subtitle">
-            Create a account? <a href="/admin/signup">Sign up</a>
+            Create a account? <Link to="/admin/signup">Sign up</Link>
           </p>
 
           <form className="auth-form" onSubmit={onsubmit}>
