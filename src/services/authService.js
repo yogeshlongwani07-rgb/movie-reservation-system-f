@@ -1,11 +1,11 @@
 import api from "./api";
 
-async function create(adminData, role) {
-  return await api.post(`/${role}/register`, adminData);
+async function create(credentials, role) {
+  return await api.post(`/${role}/register`, credentials);
 }
 
-async function validate(adminData, role) {
-  return await api.post(`/${role}/login`, adminData);
+async function validate(payload, role) {
+  return await api.post(`/${role}/login`, payload);
 }
 
 export { create, validate };
