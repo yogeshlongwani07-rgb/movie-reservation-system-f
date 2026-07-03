@@ -8,4 +8,8 @@ async function validate(payload, role) {
   return await api.post(`/${role}/login`, payload);
 }
 
-export { create, validate };
+async function getProfile(role) {
+  return await api.get(`/${role}/auth-me`);
+}
+
+export { create, validate, getProfile };
