@@ -1,3 +1,4 @@
+import "../../css/userDashboard.css";
 export default function UserDashboard() {
   return (
     <>
