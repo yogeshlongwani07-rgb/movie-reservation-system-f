@@ -1,0 +1,36 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  border: 2px solid black;
+}
+
+.Dashboard {
+  display: flex;
+}
+
+.main-content {
+  height: 100vh;
+  border: 2px solid black;
+  width: calc(100% - 250px);
+}
+
+.navbar {
+  height: 50px;
+  width: 100%;
+  border: 2px solid black;
+}
+
+.profile-and-poster {
+  display: flex;
+}
+
+.poster {
+  width: 70%;
+  height: calc(100vh - 50px);
+  border: 2px solid black;
+}
+.profile {
+  width: 30%;
+  height: calc(100vh - 50px);
+  border: 2px solid black;
+}

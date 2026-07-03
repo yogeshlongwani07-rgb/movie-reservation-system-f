@@ -19,17 +19,17 @@ export default function Router() {
         <Route
           path="/admin/dashboard"
           element={
-            <ProtectedRoute role="admin">
-              <AdminDashboard />
-            </ProtectedRoute>
+            // <ProtectedRoute role="admin">
+            <AdminDashboard />
+            // </ProtectedRoute>
           }
         ></Route>
         <Route
           path="/user/dashboard"
           element={
-            <ProtectedRoute role="user">
-              <UserDashboard />
-            </ProtectedRoute>
+            // <ProtectedRoute role="user">
+            <UserDashboard />
+            // </ProtectedRoute>
           }
         ></Route>
         <Route path="*" element={<NotFound />}></Route>
