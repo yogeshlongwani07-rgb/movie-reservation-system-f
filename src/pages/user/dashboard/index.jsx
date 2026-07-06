@@ -5,6 +5,11 @@ import SideBar from "./components/sidebar";
 import Profile from "./components/profile";
 import Navbar from "./components/navbar";
 import Hero from "./components/hero";
+import Movies from "../movie-discovery/movies";
+import Shows from "../movie-discovery/shows";
+import Bookings from "../activites/bookings";
+import ProfilePage from "../account/profile";
+import Payment from "../account/payment";
 
 const MOCK_USER = {
   name: "Yogesh Longwani",
@@ -48,27 +53,44 @@ export default function UserDashboard() {
   const [movies] = useState(MOCK_MOVIES);
   const [user] = useState(MOCK_USER);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [activePage, setActivePage] = useState("dashboard");
 
   useEffect(() => {
     if (movies.length < 2) return;
     const t = setInterval(
       () => setActiveSlide((i) => (i + 1) % movies.length),
-      6000,
+      4000,
     );
     return () => clearInterval(t);
   }, [movies.length]);
+
+  function renderPage() {
+    switch (activePage) {
+      case "Movies":
+        return <Movies />;
+      case "shows":
+        return <Shows />;
+      case "bookings":
+        return <Bookings />;
+      case "profile":
+        return <ProfilePage />;
+      case "payment":
+        return <Payment />;
+      default:
+        return <Hero movie={movie} movies={movies} activeSlide={activeSlide} />;
+    }
+  }
 
   const movie = movies[activeSlide];
 
   return (
     <div className="Dashboard">
-      <SideBar />
+      <SideBar activePage={activePage} setActivePage={setActivePage} />
       <div className="main-content">
         <Navbar user={user} />
 
         <div className="profile-and-poster">
-          <Hero movie={movie} movies={movies} activeSlide={activeSlide} />
-
+          {renderPage(activePage)}
           <Profile user={user} />
         </div>
       </div>

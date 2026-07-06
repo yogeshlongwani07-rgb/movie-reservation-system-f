@@ -26,7 +26,7 @@ const NAV_SECTIONS = [
   },
 ];
 
-export default function SideBar() {
+export default function SideBar({ activePage, setActivePage }) {
   return (
     <>
       <aside className="sidebar">
