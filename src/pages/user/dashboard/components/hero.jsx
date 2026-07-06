@@ -1,18 +1,9 @@
 import Icon from "./icon";
 import { useState, useEffect } from "react";
 
-const backdrop = [
-  {
-    url: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1600&auto=format&fit=crop",
-    tag: "NOW IN CINEMAS",
-  },
-  {
-    url: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=1600&auto=format&fit=crop",
-    tag: "NEW RELEASE",
-  },
-];
+import { sample } from "../../../../constants/user-contants";
 
-export default function Hero({ movies }) {
+export default function Hero({ movies, setActivePage }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
@@ -30,12 +21,12 @@ export default function Hero({ movies }) {
       <section className="poster">
         <div
           className="poster-backdrop"
-          style={{ backgroundImage: `url(${backdrop[activeSlide].url})` }}
+          style={{ backgroundImage: `url(${sample[activeSlide].url})` }}
         />
         <div className="poster-scrim" />
 
         <div className="poster-content">
-          <span className="poster-eyebrow">{backdrop[activeSlide].tag}</span>
+          <span className="poster-eyebrow">{sample[activeSlide].tag}</span>
           <h2 className="poster-title">
             {movie.title}
             <br />
@@ -51,7 +42,12 @@ export default function Hero({ movies }) {
             <span>{movie.duration}</span>
           </div>
           <div className="poster-actions">
-            <button className="btn btn-primary">Book Tickets</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => setActivePage("movies")}
+            >
+              Book Tickets
+            </button>
             <button className="btn btn-ghost">
               <Icon name="play" size={16} /> Watch Trailer
             </button>

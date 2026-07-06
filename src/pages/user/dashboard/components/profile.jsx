@@ -1,23 +1,7 @@
 import { useState, useEffect } from "react";
-const avatar =
-  "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop";
+import { avatar } from "../../../../constants/user-contants";
 
 import Icon from "./icon";
-
-const MOCK_USER = {
-  name: "Yogesh Longwani",
-  greetingName: "Yogesh",
-  email: "yogesh@example.com",
-  isPremium: true,
-  avatar:
-    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop",
-  stats: [
-    { key: "bookings", label: "Bookings", value: 12, icon: "ticket" },
-    { key: "wishlist", label: "Wishlist", value: 8, icon: "heart" },
-    { key: "reviews", label: "Reviews", value: 24, icon: "star" },
-    { key: "saved", label: "Saved", value: "₹2,450", icon: "wallet" },
-  ],
-};
 
 export default function Profile({ user }) {
   const stats = [

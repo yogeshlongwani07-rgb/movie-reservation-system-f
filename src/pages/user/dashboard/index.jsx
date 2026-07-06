@@ -12,25 +12,8 @@ import ProfilePage from "../account/profile";
 import Payment from "../account/payment";
 import { useAuth } from "../../../context/authContext";
 import getFewMovies from "../../../services/getFewMovies";
+import { MOCK_MOVIES } from "../../../constants/user-contants";
 
-const MOCK_MOVIES = [
-  {
-    _id: 1,
-    title: "Mission: Impossible",
-    description: "Dead Reckoning Part One",
-    rating: 8.6,
-    language: "English",
-    duration: "2h 43m",
-  },
-  {
-    _id: 2,
-    title: "Kalki 2898 AD",
-    description: "A sci-fi epic",
-    rating: 8.7,
-    language: "Telugu, Hindi",
-    duration: "2h 56m",
-  },
-];
 export default function UserDashboard() {
   const [activePage, setActivePage] = useState("dashboard");
   const [showMovies, setShowMovies] = useState([]);
@@ -62,7 +45,7 @@ export default function UserDashboard() {
       case "payment":
         return <Payment />;
       default:
-        return <Hero movies={movies} />;
+        return <Hero movies={movies} setActivePage={setActivePage} />;
     }
   }
 
