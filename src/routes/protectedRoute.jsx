@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
+import Loading from "../pages/loading";
 
 export default function ProtectedRoute({ children, role }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
 
   useEffect(() => {
     async function fetchProfile() {
@@ -22,11 +23,14 @@ export default function ProtectedRoute({ children, role }) {
         setLoading(false);
       }
     }
-    fetchProfile();
+
+    if (!user) {
+      fetchProfile();
+    }
   }, [role]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!isAuthenticated) {

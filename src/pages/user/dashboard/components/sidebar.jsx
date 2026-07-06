@@ -1,30 +1,6 @@
 import Icon from "../components/icon";
 
-const NAV_SECTIONS = [
-  {
-    label: "Movie Discovery",
-    items: [
-      { key: "movies", label: "Movies", icon: "film" },
-      { key: "shows", label: "Shows", icon: "calendar" },
-    ],
-  },
-  {
-    label: "My Activities",
-    items: [
-      { key: "bookings", label: "My Bookings", icon: "clipboard" },
-      // { key: "wishlist", label: "Wishlist", icon: "heart" },
-      // { key: "reviews", label: "Reviews & Ratings", icon: "star" },
-    ],
-  },
-  {
-    label: "My Account",
-    items: [
-      { key: "profile", label: "Profile", icon: "user" },
-      { key: "payment", label: "Payment Methods", icon: "card" },
-      // { key: "settings", label: "Settings", icon: "settings" },
-    ],
-  },
-];
+import { NAV_SECTIONS } from "../../../../constants/user-contants";
 
 export default function SideBar({ activePage, setActivePage }) {
   return (
@@ -76,7 +52,12 @@ export default function SideBar({ activePage, setActivePage }) {
           <p className="sidebar-promo-copy">
             Get up to 25% off on your movie tickets
           </p>
-          <button className="btn btn-light">Book Now</button>
+          <button
+            className="btn btn-light"
+            onClick={() => setActivePage("movies")}
+          >
+            Book Now
+          </button>
         </div>
 
         <button className="sidebar-link  sidebar-logout">

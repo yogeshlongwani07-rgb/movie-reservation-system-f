@@ -11,45 +11,26 @@ import Bookings from "../activites/bookings";
 import ProfilePage from "../account/profile";
 import Payment from "../account/payment";
 import { useAuth } from "../../../context/authContext";
+import getFewMovies from "../../../services/getFewMovies";
+import { MOCK_MOVIES } from "../../../constants/user-contants";
 
-const MOCK_MOVIES = [
-  {
-    id: 1,
-    tag: "NOW IN CINEMAS",
-    title: "Mission: Impossible",
-    subtitle: "Dead Reckoning Part One",
-    rating: 8.6,
-    language: "English",
-    duration: "2h 43m",
-    backdrop:
-      "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1600&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    tag: "NEW RELEASE",
-    title: "Kalki 2898 AD",
-    subtitle: "A sci-fi epic",
-    rating: 8.7,
-    language: "Telugu, Hindi",
-    duration: "2h 56m",
-    backdrop:
-      "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=1600&auto=format&fit=crop",
-  },
-];
 export default function UserDashboard() {
-  const [movies] = useState(MOCK_MOVIES);
-  const [activeSlide, setActiveSlide] = useState(0);
   const [activePage, setActivePage] = useState("dashboard");
+  const [showMovies, setShowMovies] = useState([]);
   const { user } = useAuth();
-
   useEffect(() => {
-    if (movies.length < 2) return;
-    const t = setInterval(
-      () => setActiveSlide((i) => (i + 1) % movies.length),
-      4000,
-    );
-    return () => clearInterval(t);
-  }, [movies.length]);
+    async function showCaseMovies() {
+      try {
+        const data = await getFewMovies();
+        setShowMovies(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    showCaseMovies();
+  }, []);
+
+  const movies = showMovies.length >= 2 ? showMovies : MOCK_MOVIES;
 
   function renderPage() {
     switch (activePage) {
@@ -64,11 +45,9 @@ export default function UserDashboard() {
       case "payment":
         return <Payment />;
       default:
-        return <Hero movie={movie} movies={movies} activeSlide={activeSlide} />;
+        return <Hero movies={movies} setActivePage={setActivePage} />;
     }
   }
-
-  const movie = movies[activeSlide];
 
   return (
     <div className="Dashboard">
