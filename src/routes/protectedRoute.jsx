@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
+import Loading from "../pages/loading";
 
 export default function ProtectedRoute({ children, role }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,7 +30,7 @@ export default function ProtectedRoute({ children, role }) {
   }, [role]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!isAuthenticated) {
