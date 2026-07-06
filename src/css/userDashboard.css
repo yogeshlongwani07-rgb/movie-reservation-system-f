@@ -608,6 +608,1022 @@ body {
   color: var(--muted);
 }
 
+/* ===================== SHARED PAGE SHELL ===================== */
+.profile-and-poster.is-full {
+  align-items: flex-start;
+}
+
+.page {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--ink);
+}
+
+.page-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.page-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 10px 16px;
+  min-width: 260px;
+  color: var(--muted);
+}
+
+.page-search input {
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
+  font-size: 13.5px;
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.back-link:hover {
+  color: var(--primary-dark);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 20px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+/* ===================== FILTER CHIPS ===================== */
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: #45445f;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.filter-chip:hover {
+  border-color: var(--accent);
+  color: var(--primary-dark);
+}
+.filter-chip.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+/* ===================== MOVIE GRID ===================== */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.movie-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+}
+.movie-card:hover {
+  transform: translateY(-4px);
+}
+
+.skeleton-card {
+  min-height: 340px;
+  background: linear-gradient(100deg, #f1f0fa 30%, #f7f6ff 50%, #f1f0fa 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.movie-poster {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie-rating {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(10, 8, 30, 0.72);
+  color: var(--amber);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  backdrop-filter: blur(3px);
+}
+
+.movie-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.movie-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15.5px;
+  color: var(--ink);
+}
+
+.movie-desc {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.movie-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.movie-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.movie-tag {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  background: #efeaff;
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+.btn-block {
+  width: 100%;
+  justify-content: center;
+  margin-top: auto;
+}
+
+/* ===================== SHOWS PAGE ===================== */
+.show-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+.show-poster {
+  width: 92px;
+  height: 130px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.show-meta {
+  color: var(--muted);
+  margin: 8px 0;
+}
+.show-meta .poster-rating {
+  color: var(--amber);
+}
+.show-meta .poster-dot {
+  background: #c9c7de;
+}
+
+.show-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.date-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.date-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 58px;
+  border: 1px solid var(--border);
+  background: var(--canvas);
+  border-radius: var(--radius-sm);
+  padding: 10px 6px;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 11px;
+  font-family: var(--font-body);
+}
+
+.date-chip strong {
+  font-family: var(--font-display);
+  font-size: 16px;
+}
+
+.date-chip.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.theatre-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.theatre-card {
+  border: 1px solid var(--border);
+  background: var(--canvas);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  cursor: pointer;
+  text-align: left;
+  min-width: 160px;
+}
+
+.theatre-name {
+  margin: 0;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.theatre-city {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.theatre-card.is-active {
+  border-color: var(--primary);
+  background: #efeaff;
+}
+.theatre-card.is-active .theatre-name {
+  color: var(--primary-dark);
+}
+
+.time-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.time-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--canvas);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #45445f;
+  cursor: pointer;
+}
+
+.time-chip.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+/* ===================== SEAT MAP ===================== */
+.seat-map {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.screen-bar {
+  width: 70%;
+  max-width: 420px;
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 14px;
+  margin-bottom: 8px;
+  border-bottom: 3px solid var(--border);
+  border-radius: 50%;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seat-row-label {
+  width: 16px;
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.seat-row-seats {
+  display: flex;
+  gap: 6px;
+}
+
+.seat {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px 6px 3px 3px;
+  border: 1.5px solid var(--border);
+  background: var(--canvas);
+  cursor: pointer;
+  padding: 0;
+}
+
+.seat.seat-premium {
+  border-color: #d8cff7;
+}
+.seat.seat-recliner {
+  border-color: #f3d9a8;
+}
+
+.seat.is-taken {
+  background: #e3e2ef;
+  border-color: #e3e2ef;
+  cursor: not-allowed;
+}
+
+.seat.is-selected {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.seat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.seat-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  display: inline-block;
+}
+.dot-classic {
+  background: var(--canvas);
+  border: 1.5px solid var(--border);
+}
+.dot-premium {
+  background: var(--canvas);
+  border: 1.5px solid #d8cff7;
+}
+.dot-recliner {
+  background: var(--canvas);
+  border: 1.5px solid #f3d9a8;
+}
+.dot-taken {
+  background: #e3e2ef;
+}
+.dot-selected {
+  background: var(--primary);
+}
+
+.booking-bar {
+  position: sticky;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 16px 22px;
+  box-shadow: 0 12px 30px rgba(20, 20, 43, 0.25);
+}
+
+.booking-bar-label {
+  margin: 0;
+  font-size: 12.5px;
+  color: #cfcde4;
+}
+
+.booking-bar-amount {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ===================== PAYMENT PAGE ===================== */
+.payment-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.payment-methods {
+  flex: 1.4;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.method-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.method-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.method-card input {
+  accent-color: var(--primary);
+}
+
+.method-card.is-active {
+  border-color: var(--primary);
+  background: #efeaff;
+}
+
+.method-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--canvas);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-span-2 {
+  grid-column: span 2;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.form-group input,
+.form-group select {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  font-size: 13.5px;
+  font-family: var(--font-body);
+  color: var(--ink);
+  outline: none;
+  background: var(--canvas);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+}
+
+.input-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 13px;
+  background: var(--canvas);
+  color: var(--muted);
+}
+
+.input-icon input {
+  border: none;
+  background: none;
+  outline: none;
+  padding: 11px 0;
+  width: 100%;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.save-confirm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.secure-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--muted);
+  margin: 0;
+}
+
+.order-summary {
+  flex: 1;
+  background: linear-gradient(165deg, #efeaff 0%, var(--surface) 45%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+  position: sticky;
+  top: 20px;
+}
+
+.summary-movie {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summary-movie img {
+  width: 56px;
+  height: 78px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.summary-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.summary-sub {
+  margin: 3px 0 0;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #45445f;
+  padding: 8px 0;
+  border-top: 1px dashed var(--border);
+}
+
+.summary-total {
+  border-top: 1.5px solid var(--border);
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+
+.success-card {
+  max-width: 440px;
+  margin: 20px auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 34px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e6f7f1;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-card h2 {
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+.success-card p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.ticket-mini {
+  width: 100%;
+  background: var(--canvas);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-size: 12.5px;
+  color: #45445f;
+}
+.ticket-mini p {
+  margin: 2px 0;
+  color: #45445f;
+}
+
+/* ===================== BOOKINGS PAGE ===================== */
+.tab-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tab-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: #45445f;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.tab-chip.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.tab-count {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  font-size: 10.5px;
+  padding: 1px 7px;
+}
+
+.tab-chip:not(.is-active) .tab-count {
+  background: var(--canvas);
+  color: var(--muted);
+}
+
+.ticket-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ticket-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.ticket-poster {
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.ticket-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ticket-body {
+  flex: 1;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ticket-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ticket-top h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+}
+
+.ticket-venue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.ticket-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #45445f;
+}
+.ticket-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.status-upcoming {
+  background: #efeaff;
+  color: var(--primary-dark);
+}
+.status-completed {
+  background: #e6f7f1;
+  color: var(--green);
+}
+.status-cancelled {
+  background: #fdecee;
+  color: var(--red);
+}
+
+.ticket-stub {
+  position: relative;
+  width: 1px;
+  background: none;
+  border-left: 2px dashed var(--border);
+  margin: 14px 0;
+}
+
+.ticket-notch {
+  position: absolute;
+  left: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--canvas);
+  border: 1px solid var(--border);
+}
+.ticket-notch--top {
+  top: -14px;
+}
+.ticket-notch--bottom {
+  bottom: -14px;
+}
+
+.ticket-side {
+  width: 140px;
+  flex-shrink: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.ticket-id {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ticket-amount {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.btn-ghost-outline {
+  border: 1px solid var(--red);
+  color: var(--red);
+  background: none;
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-ghost-outline:hover {
+  background: #fdecee;
+}
+
+/* ===================== PROFILE SETTINGS PAGE ===================== */
+.profile-settings-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.profile-side-card {
+  width: 280px;
+  flex-shrink: 0;
+  background: linear-gradient(165deg, #efeaff 0%, var(--surface) 40%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.profile-avatar-lg {
+  width: 88px;
+  height: 88px;
+  margin-bottom: 6px;
+}
+
+.avatar-upload-btn {
+  margin-top: 14px;
+}
+
+.profile-main-card {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ===================== RESPONSIVE (base) ===================== */
+@media (max-width: 900px) {
+  .payment-layout,
+  .profile-settings-layout {
+    flex-direction: column;
+  }
+  .order-summary {
+    width: 100%;
+    position: static;
+  }
+  .profile-side-card {
+    width: 100%;
+  }
+}
+
 /* ===================== RESPONSIVE ===================== */
 @media (max-width: 1080px) {
   .profile-and-poster {

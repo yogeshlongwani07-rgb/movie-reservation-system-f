@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { avatar } from "../../../../constants/user-contants";
 
 import Icon from "./icon";

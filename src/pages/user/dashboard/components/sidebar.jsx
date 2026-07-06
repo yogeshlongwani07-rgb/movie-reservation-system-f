@@ -32,7 +32,6 @@ export default function SideBar({ activePage, setActivePage }) {
               <p className="sidebar-group-label">{section.label}</p>
               {section.items.map((item) => (
                 <button
-                  className="sidebar-link"
                   key={item.key}
                   className={`sidebar-link ${
                     activePage === item.key ? "is-active" : ""
@@ -65,7 +64,6 @@ export default function SideBar({ activePage, setActivePage }) {
           Logout
         </button>
       </aside>
-      ;
     </>
   );
 }

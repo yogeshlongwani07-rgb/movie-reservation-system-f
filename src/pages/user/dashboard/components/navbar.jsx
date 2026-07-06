@@ -10,10 +10,8 @@ export default function Navbar({ user }) {
         </button>
 
         <div className="navbar-greeting">
-          <h1>
-            Hello, {user.name}! <span>👋</span>
-          </h1>
-          <p>What movie adventure are you planning today?</p>
+          <h1>Hello, {user.name.split(" ")[0]}!</h1>
+          <p>Ready for your next movie?</p>
         </div>
 
         <div className="navbar-search">

@@ -98,6 +98,55 @@ export default function Icon({ name, size = 18 }) {
         <path d="m16 17 5-5-5-5M21 12H9" />
       </>
     ),
+    close: <path d="M18 6 6 18M6 6l12 12" />,
+    check: <path d="m20 6-11 11-5-5" />,
+    clock: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3.5 2" />
+      </>
+    ),
+    seat: (
+      <>
+        <path d="M6 12V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v6" />
+        <path d="M5 12h14a1.5 1.5 0 0 1 1.5 1.5V16a1 1 0 0 1-1 1h-1.2M5 12a1.5 1.5 0 0 0-1.5 1.5V16a1 1 0 0 0 1 1h1.2M5.5 17v3M18.5 17v3" />
+      </>
+    ),
+    filter: <path d="M4 5h16M7 12h10M10 19h4" />,
+    edit: (
+      <>
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+      </>
+    ),
+    mail: (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3.5 6 8.5 7 8.5-7" />
+      </>
+    ),
+    phone: (
+      <path d="M5.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a1.5 1.5 0 0 1-1.6 1.5A16.5 16.5 0 0 1 4 6.1 1.5 1.5 0 0 1 5.5 3.5Z" />
+    ),
+    shield: <path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6Z" />,
+    "arrow-left": <path d="M19 12H5M11 6l-6 6 6 6" />,
+    plus: <path d="M12 5v14M5 12h14" />,
+    minus: <path d="M5 12h14" />,
+    info: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8h.01M11 11.5h1v5h1" />
+      </>
+    ),
+    sparkles: (
+      <path d="m12 2 1.8 4.9L19 8.5l-5.2 1.6L12 15l-1.8-4.9L5 8.5l5.2-1.6Z" />
+    ),
+    monitor: (
+      <>
+        <rect x="3" y="4" width="18" height="13" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+      </>
+    ),
   };
   return <svg {...common}>{paths[name]}</svg>;
 }
