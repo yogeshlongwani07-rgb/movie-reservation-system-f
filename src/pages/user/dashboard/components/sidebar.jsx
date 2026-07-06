@@ -41,19 +41,31 @@ export default function SideBar({ activePage, setActivePage }) {
         </div>
 
         <nav className="sidebar-nav">
-          <a className="sidebar-link is-active" href="#">
+          <button
+            className={`sidebar-link ${
+              activePage === "dashboard" ? "is-active" : ""
+            }`}
+            onClick={() => setActivePage("dashboard")}
+          >
             <Icon name="dashboard" size={18} />
             Dashboard
-          </a>
+          </button>
 
           {NAV_SECTIONS.map((section) => (
             <div className="sidebar-group" key={section.label}>
               <p className="sidebar-group-label">{section.label}</p>
               {section.items.map((item) => (
-                <a className="sidebar-link" href="#" key={item.key}>
+                <button
+                  className="sidebar-link"
+                  key={item.key}
+                  className={`sidebar-link ${
+                    activePage === item.key ? "is-active" : ""
+                  }`}
+                  onClick={() => setActivePage(item.key)}
+                >
                   <Icon name={item.icon} size={18} />
                   {item.label}
-                </a>
+                </button>
               ))}
             </div>
           ))}
@@ -67,10 +79,10 @@ export default function SideBar({ activePage, setActivePage }) {
           <button className="btn btn-light">Book Now</button>
         </div>
 
-        <a className="sidebar-link  sidebar-logout" href="#">
+        <button className="sidebar-link  sidebar-logout">
           <Icon name="logout" size={18} />
           Logout
-        </a>
+        </button>
       </aside>
       ;
     </>

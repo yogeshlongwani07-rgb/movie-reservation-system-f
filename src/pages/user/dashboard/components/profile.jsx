@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+const avatar =
+  "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop";
 
 import Icon from "./icon";
 
@@ -18,19 +20,25 @@ const MOCK_USER = {
 };
 
 export default function Profile({ user }) {
+  const stats = [
+    {
+      key: "bookings",
+      label: "Bookings",
+      value: user.bookings.length,
+      icon: "ticket",
+    },
+    { key: "wishlist", label: "Wishlist", value: 0, icon: "heart" },
+    { key: "reviews", label: "Reviews", value: 0, icon: "star" },
+    { key: "saved", label: "Saved", value: 0, icon: "wallet" },
+  ];
   return (
     <>
       <aside className="profile">
         <div className="profile-card">
           <div className="profile-header">
-            <img className="profile-avatar" src={user.avatar} alt={user.name} />
+            <img className="profile-avatar" src={avatar} alt={user.name} />
             <p className="profile-name">{user.name}</p>
             <p className="profile-email">{user.email}</p>
-            {user.isPremium && (
-              <span className="profile-badge">
-                <Icon name="star" size={12} /> Premium Member
-              </span>
-            )}
           </div>
 
           <div className="profile-stub" aria-hidden="true">
@@ -40,7 +48,7 @@ export default function Profile({ user }) {
           </div>
 
           <div className="profile-stats">
-            {user.stats.map((s) => (
+            {stats.map((s) => (
               <div className="profile-stat" key={s.key}>
                 <span className={`profile-stat-icon icon-${s.key}`}>
                   <Icon name={s.icon} size={16} />

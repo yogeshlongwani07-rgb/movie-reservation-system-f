@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { getProfile } from "../services/authService";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 export default function ProtectedRoute({ children, role }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { setUser } = useAuth();
 
   useEffect(() => {
     async function fetchProfile() {
@@ -12,6 +14,7 @@ export default function ProtectedRoute({ children, role }) {
         const profile = await getProfile(role);
         console.log(profile);
         setIsAuthenticated(true);
+        setUser(profile.data.user);
       } catch (err) {
         console.log(err);
         setIsAuthenticated(false);

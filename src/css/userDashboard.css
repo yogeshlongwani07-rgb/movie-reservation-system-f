@@ -123,12 +123,24 @@ body {
   display: flex;
   align-items: center;
   gap: 11px;
+  width: 100%;
   padding: 10px 12px;
   border-radius: var(--radius-sm);
+
   font-size: 14px;
   font-weight: 500;
+  font-family: inherit;
   color: #45445f;
+
+  background: none;
+  border: none;
+  outline: none;
+  appearance: none;
+
   text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+
   transition:
     background 0.15s ease,
     color 0.15s ease;

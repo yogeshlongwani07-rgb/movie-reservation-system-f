@@ -10,21 +10,8 @@ import Shows from "../movie-discovery/shows";
 import Bookings from "../activites/bookings";
 import ProfilePage from "../account/profile";
 import Payment from "../account/payment";
+import { useAuth } from "../../../context/authContext";
 
-const MOCK_USER = {
-  name: "Yogesh Longwani",
-  greetingName: "Yogesh",
-  email: "yogesh@example.com",
-  isPremium: true,
-  avatar:
-    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop",
-  stats: [
-    { key: "bookings", label: "Bookings", value: 12, icon: "ticket" },
-    { key: "wishlist", label: "Wishlist", value: 8, icon: "heart" },
-    { key: "reviews", label: "Reviews", value: 24, icon: "star" },
-    { key: "saved", label: "Saved", value: "₹2,450", icon: "wallet" },
-  ],
-};
 const MOCK_MOVIES = [
   {
     id: 1,
@@ -51,9 +38,9 @@ const MOCK_MOVIES = [
 ];
 export default function UserDashboard() {
   const [movies] = useState(MOCK_MOVIES);
-  const [user] = useState(MOCK_USER);
   const [activeSlide, setActiveSlide] = useState(0);
   const [activePage, setActivePage] = useState("dashboard");
+  const { user } = useAuth();
 
   useEffect(() => {
     if (movies.length < 2) return;
@@ -66,7 +53,7 @@ export default function UserDashboard() {
 
   function renderPage() {
     switch (activePage) {
-      case "Movies":
+      case "movies":
         return <Movies />;
       case "shows":
         return <Shows />;
@@ -91,7 +78,7 @@ export default function UserDashboard() {
 
         <div className="profile-and-poster">
           {renderPage(activePage)}
-          <Profile user={user} />
+          {activePage === "dashboard" && <Profile user={user} />}
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import Icon from "./icon";
-
+const avatar =
+  "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop";
 
 export default function Navbar({ user }) {
   return (
@@ -11,7 +12,7 @@ export default function Navbar({ user }) {
 
         <div className="navbar-greeting">
           <h1>
-            Hello, {user.greetingName}! <span>👋</span>
+            Hello, {user.name}! <span>👋</span>
           </h1>
           <p>What movie adventure are you planning today?</p>
         </div>
@@ -30,7 +31,7 @@ export default function Navbar({ user }) {
             <span className="navbar-badge">3</span>
           </button>
           <button className="navbar-avatar">
-            <img src={user.avatar} alt={user.name} />
+            <img src={avatar} alt={user.name} />
             <Icon name="chevron" size={16} />
           </button>
         </div>
