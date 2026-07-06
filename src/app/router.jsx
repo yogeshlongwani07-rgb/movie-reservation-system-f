@@ -5,7 +5,7 @@ import UserLogin from "../pages/auth/user/login";
 import UserSignup from "../pages/auth/user/signup";
 import NotFound from "../pages/NotFound";
 import AdminDashboard from "../pages/admin/dashboard";
-import UserDashboard from "../pages/user/dashboard";
+import UserDashboard from "../pages/user/dashboard/index";
 import ProtectedRoute from "../routes/protectedRoute";
 
 export default function Router() {
