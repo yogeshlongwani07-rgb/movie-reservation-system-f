@@ -29,7 +29,12 @@ export default function Profile({ user }) {
     },
     { key: "wishlist", label: "Wishlist", value: 0, icon: "heart" },
     { key: "reviews", label: "Reviews", value: 0, icon: "star" },
-    { key: "saved", label: "Saved", value: 0, icon: "wallet" },
+    {
+      key: "saved",
+      label: "Saved",
+      value: user.bookings.length * 250,
+      icon: "wallet",
+    },
   ];
   return (
     <>

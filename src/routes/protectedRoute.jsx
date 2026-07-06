@@ -6,7 +6,7 @@ import { useAuth } from "../context/authContext";
 export default function ProtectedRoute({ children, role }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
 
   useEffect(() => {
     async function fetchProfile() {
@@ -22,7 +22,10 @@ export default function ProtectedRoute({ children, role }) {
         setLoading(false);
       }
     }
-    fetchProfile();
+
+    if (!user) {
+      fetchProfile();
+    }
   }, [role]);
 
   if (loading) {
