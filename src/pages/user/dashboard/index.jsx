@@ -57,8 +57,6 @@ export default function UserDashboard() {
     fetchBookings();
   }, [fetchMovies, fetchBookings]);
 
-  // id -> movie lookup, used to enrich bookings (the backend only stores a
-  // movie ObjectId + showId on each booking, not the title/date/etc).
   const moviesMap = useMemo(() => {
     const map = {};
     movies.forEach((m) => {
