@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import "../../../css/userDashboard.css";
 import SideBar from "./components/sidebar";
 import Profile from "./components/profile";
@@ -9,34 +9,67 @@ import Shows from "../movie-discovery/shows";
 import Bookings from "../activites/bookings";
 import ProfilePage from "../account/profile";
 import Payment from "../account/payment";
+import Loading from "../../loading";
 import { useAuth } from "../../../context/authContext";
-import getFewMovies from "../../../services/getFewMovies";
-import { MOCK_MOVIES, MOCK_BOOKINGS } from "../../../constants/user-contants";
+import { getMovies } from "../../../services/movieService";
+import { getMyBookings, cancelBooking } from "../../../services/bookingService";
 
 export default function UserDashboard() {
   const [activePage, setActivePage] = useState("dashboard");
-  const [showMovies, setShowMovies] = useState([]);
+
+  const [movies, setMovies] = useState([]);
+  const [moviesLoading, setMoviesLoading] = useState(true);
+
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [bookingDraft, setBookingDraft] = useState(null);
-  const [bookings, setBookings] = useState(MOCK_BOOKINGS);
+
+  const [bookings, setBookings] = useState([]);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
+
   const { user } = useAuth();
 
-  useEffect(() => {
-    async function showCaseMovies() {
-      try {
-        const data = await getFewMovies();
-        setShowMovies(data);
-      } catch (err) {
-        console.error(err);
-      }
+  const fetchMovies = useCallback(async () => {
+    setMoviesLoading(true);
+    try {
+      const data = await getMovies(1, 50);
+      setMovies(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setMoviesLoading(false);
     }
-    showCaseMovies();
   }, []);
 
-  const movies = showMovies.length >= 2 ? showMovies : MOCK_MOVIES;
+  const fetchBookings = useCallback(async () => {
+    setBookingsLoading(true);
+    try {
+      const data = await getMyBookings();
+      setBookings(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setBookingsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMovies();
+    fetchBookings();
+  }, [fetchMovies, fetchBookings]);
+
+  // id -> movie lookup, used to enrich bookings (the backend only stores a
+  // movie ObjectId + showId on each booking, not the title/date/etc).
+  const moviesMap = useMemo(() => {
+    const map = {};
+    movies.forEach((m) => {
+      map[m._id] = m;
+    });
+    return map;
+  }, [movies]);
 
   function goToShows(movie) {
     setSelectedMovie(movie);
+    setBookingDraft(null);
     setActivePage("shows");
   }
 
@@ -45,34 +78,27 @@ export default function UserDashboard() {
     setActivePage("payment");
   }
 
-  function confirmBooking(finalBooking) {
-    const newBooking = {
-      id: `MVQ${Math.floor(10000 + Math.random() * 89999)}`,
-      movie: finalBooking.movie.title,
-      poster: finalBooking.movie.poster,
-      theatre: `${finalBooking.theatre.name}, ${finalBooking.theatre.city}`,
-      date: finalBooking.date,
-      time: finalBooking.time,
-      seats: finalBooking.seats,
-      amount: finalBooking.amount,
-      status: "Upcoming",
-    };
-    setBookings((prev) => [newBooking, ...prev]);
+  async function handleBooked() {
     setBookingDraft(null);
     setSelectedMovie(null);
     setActivePage("bookings");
+    await fetchBookings();
   }
 
-  function cancelBooking(id) {
-    setBookings((prev) =>
-      prev.map((b) => (b.id === id ? { ...b, status: "Cancelled" } : b)),
-    );
+  async function handleCancelBooking(bookingId) {
+    try {
+      await cancelBooking(bookingId);
+      await fetchBookings();
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Could not cancel this booking.");
+    }
   }
 
   function renderPage() {
     switch (activePage) {
       case "movies":
-        return <Movies onBook={goToShows} />;
+        return <Movies movies={movies} loading={moviesLoading} onBook={goToShows} />;
       case "shows":
         return (
           <Shows
@@ -85,7 +111,7 @@ export default function UserDashboard() {
         return (
           <Payment
             booking={bookingDraft}
-            onPay={confirmBooking}
+            onBooked={handleBooked}
             onBack={() => setActivePage("shows")}
           />
         );
@@ -93,7 +119,9 @@ export default function UserDashboard() {
         return (
           <Bookings
             bookings={bookings}
-            onCancel={cancelBooking}
+            loading={bookingsLoading}
+            moviesMap={moviesMap}
+            onCancel={handleCancelBooking}
             onBrowse={() => setActivePage("movies")}
           />
         );
@@ -101,17 +129,19 @@ export default function UserDashboard() {
         return (
           <ProfilePage
             user={user}
-            bookingsCount={
-              bookings.filter((b) => b.status !== "Cancelled").length
-            }
+            bookingsCount={bookings.filter((b) => b.status === "Confirmed").length}
           />
         );
       default:
-        return <Hero movies={movies} setActivePage={setActivePage} />;
+        return <Hero movies={movies} loading={moviesLoading} setActivePage={setActivePage} />;
     }
   }
 
   const showSidePanel = activePage === "dashboard";
+
+  if (!user) {
+    return <Loading />;
+  }
 
   return (
     <div className="Dashboard">

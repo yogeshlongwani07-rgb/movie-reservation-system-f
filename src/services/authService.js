@@ -12,4 +12,8 @@ async function getProfile(role) {
   return await api.get(`/${role}/auth-me`);
 }
 
-export { create, validate, getProfile };
+async function logout(role) {
+  return await api.post(`/${role}/logout`);
+}
+
+export { create, validate, getProfile, logout };

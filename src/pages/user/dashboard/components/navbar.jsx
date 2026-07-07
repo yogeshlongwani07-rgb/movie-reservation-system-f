@@ -10,7 +10,7 @@ export default function Navbar({ user }) {
         </button>
 
         <div className="navbar-greeting">
-          <h1>Hello, {user.name.split(" ")[0]}!</h1>
+          <h1>Hello, {user?.name ? user.name.split(" ")[0] : "there"}!</h1>
           <p>Ready for your next movie?</p>
         </div>
 
@@ -28,7 +28,7 @@ export default function Navbar({ user }) {
             <span className="navbar-badge">3</span>
           </button>
           <button className="navbar-avatar">
-            <img src={avatar} alt={user.name} />
+            <img src={avatar} alt={user?.name || "Profile"} />
             <Icon name="chevron" size={16} />
           </button>
         </div>

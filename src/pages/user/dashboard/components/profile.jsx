@@ -3,11 +3,12 @@ import { avatar } from "../../../../constants/user-contants";
 import Icon from "./icon";
 
 export default function Profile({ user }) {
+  const bookingsCount = user?.bookings?.length || 0;
   const stats = [
     {
       key: "bookings",
       label: "Bookings",
-      value: user.bookings.length,
+      value: bookingsCount,
       icon: "ticket",
     },
     { key: "wishlist", label: "Wishlist", value: 0, icon: "heart" },
@@ -15,7 +16,7 @@ export default function Profile({ user }) {
     {
       key: "saved",
       label: "Saved",
-      value: user.bookings.length * 250,
+      value: bookingsCount * 250,
       icon: "wallet",
     },
   ];
@@ -24,9 +25,9 @@ export default function Profile({ user }) {
       <aside className="profile">
         <div className="profile-card">
           <div className="profile-header">
-            <img className="profile-avatar" src={avatar} alt={user.name} />
-            <p className="profile-name">{user.name}</p>
-            <p className="profile-email">{user.email}</p>
+            <img className="profile-avatar" src={avatar} alt={user?.name || "Profile"} />
+            <p className="profile-name">{user?.name}</p>
+            <p className="profile-email">{user?.email}</p>
           </div>
 
           <div className="profile-stub" aria-hidden="true">

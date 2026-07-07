@@ -1,8 +1,28 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Icon from "../components/icon";
 
 import { NAV_SECTIONS } from "../../../../constants/user-contants";
+import { logout } from "../../../../services/authService";
+import { useAuth } from "../../../../context/authContext";
 
 export default function SideBar({ activePage, setActivePage }) {
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    setLoggingOut(true);
+    try {
+      await logout("user");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUser(null);
+      navigate("/user/login");
+    }
+  }
+
   return (
     <>
       <aside className="sidebar">
@@ -59,9 +79,13 @@ export default function SideBar({ activePage, setActivePage }) {
           </button>
         </div>
 
-        <button className="sidebar-link  sidebar-logout">
+        <button
+          className="sidebar-link sidebar-logout"
+          onClick={handleLogout}
+          disabled={loggingOut}
+        >
           <Icon name="logout" size={18} />
-          Logout
+          {loggingOut ? "Logging out..." : "Logout"}
         </button>
       </aside>
     </>

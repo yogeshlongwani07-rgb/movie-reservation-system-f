@@ -1,45 +1,25 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Icon from "../dashboard/components/icon";
-import getFewMovies from "../../../services/getFewMovies";
-import { MOVIE_CATALOG, GENRES } from "../../../constants/user-contants";
+import { formatDuration, posterGradient } from "../../../utils/format";
 
-export default function Movies({ onBook }) {
-  const [movies, setMovies] = useState(MOVIE_CATALOG);
-  const [loading, setLoading] = useState(true);
+export default function Movies({ movies = [], loading, onBook }) {
   const [query, setQuery] = useState("");
-  const [genre, setGenre] = useState("All");
+  const [language, setLanguage] = useState("All");
 
-  useEffect(() => {
-    let active = true;
-    async function loadMovies() {
-      try {
-        const data = await getFewMovies();
-        if (active && Array.isArray(data) && data.length) {
-          const merged = data.map((m, i) => ({
-            ...MOVIE_CATALOG[i % MOVIE_CATALOG.length],
-            ...m,
-          }));
-          setMovies(merged);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        if (active) setLoading(false);
-      }
-    }
-    loadMovies();
-    return () => {
-      active = false;
-    };
-  }, []);
+  const languages = useMemo(() => {
+    const set = new Set(movies.map((m) => m.language).filter(Boolean));
+    return ["All", ...Array.from(set)];
+  }, [movies]);
 
   const filtered = useMemo(() => {
     return movies.filter((m) => {
-      const matchesQuery = m.title.toLowerCase().includes(query.toLowerCase());
-      const matchesGenre = genre === "All" || (m.genre || []).includes(genre);
-      return matchesQuery && matchesGenre;
+      const matchesQuery = (m.title || "")
+        .toLowerCase()
+        .includes(query.toLowerCase());
+      const matchesLanguage = language === "All" || m.language === language;
+      return matchesQuery && matchesLanguage;
     });
-  }, [movies, query, genre]);
+  }, [movies, query, language]);
 
   return (
     <section className="page movies-page">
@@ -63,17 +43,19 @@ export default function Movies({ onBook }) {
         </div>
       </div>
 
-      <div className="filter-chips">
-        {GENRES.map((g) => (
-          <button
-            key={g}
-            className={`filter-chip ${genre === g ? "is-active" : ""}`}
-            onClick={() => setGenre(g)}
-          >
-            {g}
-          </button>
-        ))}
-      </div>
+      {languages.length > 1 && (
+        <div className="filter-chips">
+          {languages.map((g) => (
+            <button
+              key={g}
+              className={`filter-chip ${language === g ? "is-active" : ""}`}
+              onClick={() => setLanguage(g)}
+            >
+              {g}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading ? (
         <div className="movie-grid">
@@ -88,38 +70,49 @@ export default function Movies({ onBook }) {
         </div>
       ) : (
         <div className="movie-grid">
-          {filtered.map((movie) => (
-            <article className="movie-card" key={movie._id}>
-              <div className="movie-poster">
-                <img src={movie.poster} alt={movie.title} loading="lazy" />
-                <span className="movie-rating">
-                  <Icon name="star" size={12} /> {movie.rating}
-                </span>
-              </div>
-              <div className="movie-info">
-                <h3 className="movie-title">{movie.title}</h3>
-                <p className="movie-desc">{movie.description}</p>
-                <div className="movie-meta">
-                  <span>{movie.language}</span>
-                  <span className="poster-dot" />
-                  <span>{movie.duration}</span>
-                </div>
-                <div className="movie-tags">
-                  {(movie.genre || []).map((g) => (
-                    <span className="movie-tag" key={g}>
-                      {g}
-                    </span>
-                  ))}
-                </div>
-                <button
-                  className="btn btn-primary btn-block"
-                  onClick={() => onBook(movie)}
+          {filtered.map((movie) => {
+            const bookableShows = (movie.shows || []).filter(
+              (s) => s.availableSeats > 0,
+            ).length;
+            return (
+              <article className="movie-card" key={movie._id}>
+                <div
+                  className="movie-poster"
+                  style={{ background: posterGradient(movie.title) }}
                 >
-                  Book Tickets · ₹{movie.price ?? 199}
-                </button>
-              </div>
-            </article>
-          ))}
+                  <span className="poster-glyph">
+                    {movie.title?.[0] || "?"}
+                  </span>
+                  <span className="movie-rating">
+                    <Icon name="star" size={12} /> {movie.rating ?? 0}
+                  </span>
+                </div>
+                <div className="movie-info">
+                  <h3 className="movie-title">{movie.title}</h3>
+                  <p className="movie-desc">{movie.description}</p>
+                  <div className="movie-meta">
+                    <span>{movie.language}</span>
+                    <span className="poster-dot" />
+                    <span>{formatDuration(movie.duration)}</span>
+                  </div>
+                  <div className="movie-tags">
+                    <span className="movie-tag">
+                      {bookableShows} show{bookableShows !== 1 ? "s" : ""} open
+                    </span>
+                  </div>
+                  <button
+                    className="btn btn-primary btn-block"
+                    disabled={!(movie.shows || []).length}
+                    onClick={() => onBook(movie)}
+                  >
+                    {(movie.shows || []).length
+                      ? `Book Tickets · ₹${movie.price}`
+                      : "No Shows Scheduled"}
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
     </section>

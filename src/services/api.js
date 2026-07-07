@@ -16,8 +16,8 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalURL._retry) {
       originalURL._retry = true;
+      const role = originalURL.url.split("/")[1];
       try {
-        const role = originalURL.url.split("/")[1];
         await axios.post(
           `http://localhost:3000/api/v1/${role}/refresh-token`,
           {},

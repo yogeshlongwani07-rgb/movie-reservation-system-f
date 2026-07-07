@@ -3,24 +3,10 @@ import Icon from "../dashboard/components/icon";
 import { avatar } from "../../../constants/user-contants";
 
 export default function ProfilePage({ user, bookingsCount = 0 }) {
-  const [saved, setSaved] = useState(false);
-  const [form, setForm] = useState({
+  const [form] = useState({
     name: user?.name || "",
     email: user?.email || "",
-    phone: user?.phone || "",
   });
-  const [pw, setPw] = useState({ current: "", next: "", confirm: "" });
-
-  function updateField(key, value) {
-    setForm((prev) => ({ ...prev, [key]: value }));
-    setSaved(false);
-  }
-
-  function handleSave(e) {
-    e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2500);
-  }
 
   return (
     <section className="page profile-page">
@@ -38,7 +24,7 @@ export default function ProfilePage({ user, bookingsCount = 0 }) {
           <img
             className="profile-avatar profile-avatar-lg"
             src={avatar}
-            alt={form.name}
+            alt={form.name || "Profile"}
           />
           <p className="profile-name">{form.name || "Movie Lover"}</p>
           <p className="profile-email">{form.email}</p>
@@ -59,22 +45,17 @@ export default function ProfilePage({ user, bookingsCount = 0 }) {
 
         <div className="profile-main-card">
           <div className="tab-row">
-            <button className={`tab-chip`}>
+            <button className="tab-chip is-active">
               <Icon name="user" size={14} /> Personal Info
             </button>
           </div>
 
-          <form className="form-grid" onSubmit={handleSave}>
+          <div className="form-grid">
             <div className="form-group form-span-2">
               <label>Full Name</label>
               <div className="input-icon">
                 <Icon name="user" size={15} />
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => updateField("name", e.target.value)}
-                  placeholder="Your name"
-                />
+                <input type="text" value={form.name} readOnly placeholder="Your name" />
               </div>
             </div>
 
@@ -85,18 +66,17 @@ export default function ProfilePage({ user, bookingsCount = 0 }) {
                 <input
                   type="email"
                   value={form.email}
-                  onChange={(e) => updateField("email", e.target.value)}
+                  readOnly
                   placeholder="you@example.com"
                 />
               </div>
             </div>
-            {/* 
-            <div className="form-span-2 form-actions">
-              <button className="btn btn-primary" type="submit">
-                Save Changes
-              </button>
-            </div> */}
-          </form>
+
+            <p className="form-span-2 page-subtitle">
+              Editing your profile isn't supported yet — reach out to support
+              if these details need to change.
+            </p>
+          </div>
         </div>
       </div>
     </section>
