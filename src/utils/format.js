@@ -61,6 +61,75 @@ function todayStr() {
   return d.toISOString().slice(0, 10);
 }
 
+function timeAgo(date) {
+  if (!date) return "";
+  const d = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(d.getTime())) return "";
+  const diffMs = Date.now() - d.getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return `${days}d ago`;
+  return d.toLocaleDateString("en-US", { day: "numeric", month: "short" });
+}
+
+/**
+ * Derives a lightweight notification feed from the user's bookings.
+ * There is no notifications endpoint on the backend, so this is computed
+ * client-side from data we already have (bookings + movie catalogue).
+ */
+function buildNotifications(bookings = [], moviesMap = {}) {
+  const items = [];
+
+  bookings.forEach((raw) => {
+    const movie = moviesMap[raw.movie];
+    const title = movie?.title || "Your movie";
+    const show = movie?.shows?.find((s) => s._id === raw.showId);
+
+    if (raw.status === "Confirmed") {
+      items.push({
+        id: `${raw._id}-confirmed`,
+        icon: "ticket",
+        text: `Booking confirmed for "${title}"`,
+        time: raw.bookedAt,
+      });
+
+      if (show) {
+        const showDateTime = new Date(`${show.date}T${show.showTime || "00:00"}`);
+        const hoursToShow = (showDateTime.getTime() - Date.now()) / 3600000;
+        if (hoursToShow > 0 && hoursToShow <= 48) {
+          items.push({
+            id: `${raw._id}-reminder`,
+            icon: "clock",
+            text: `"${title}" starts ${
+              hoursToShow <= 24 ? "today/tomorrow" : "in 2 days"
+            } — ${formatDate(show.date)}, ${formatShowTime(show.showTime)}`,
+            time: raw.bookedAt,
+            priority: true,
+          });
+        }
+      }
+    } else if (raw.status === "Cancelled") {
+      items.push({
+        id: `${raw._id}-cancelled`,
+        icon: "close",
+        text: `Booking for "${title}" was cancelled`,
+        time: raw.cancelledAt || raw.bookedAt,
+      });
+    }
+  });
+
+  items.sort((a, b) => {
+    if (!!b.priority !== !!a.priority) return b.priority ? 1 : -1;
+    return new Date(b.time || 0) - new Date(a.time || 0);
+  });
+
+  return items.slice(0, 8);
+}
+
 export {
   formatDuration,
   formatDate,
@@ -69,4 +138,6 @@ export {
   seatTier,
   SEAT_TIER_MAP,
   todayStr,
+  timeAgo,
+  buildNotifications,
 };

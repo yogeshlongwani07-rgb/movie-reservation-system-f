@@ -25,6 +25,7 @@ export default function UserDashboard() {
 
   const [bookings, setBookings] = useState([]);
   const [bookingsLoading, setBookingsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { user } = useAuth();
 
@@ -93,10 +94,22 @@ export default function UserDashboard() {
     }
   }
 
+  function handleSearch(q) {
+    setSearchQuery(q);
+    setActivePage("movies");
+  }
+
   function renderPage() {
     switch (activePage) {
       case "movies":
-        return <Movies movies={movies} loading={moviesLoading} onBook={goToShows} />;
+        return (
+          <Movies
+            movies={movies}
+            loading={moviesLoading}
+            onBook={goToShows}
+            initialQuery={searchQuery}
+          />
+        );
       case "shows":
         return (
           <Shows
@@ -127,11 +140,19 @@ export default function UserDashboard() {
         return (
           <ProfilePage
             user={user}
-            bookingsCount={bookings.filter((b) => b.status === "Confirmed").length}
+            bookingsCount={
+              bookings.filter((b) => b.status === "Confirmed").length
+            }
           />
         );
       default:
-        return <Hero movies={movies} loading={moviesLoading} setActivePage={setActivePage} />;
+        return (
+          <Hero
+            movies={movies}
+            loading={moviesLoading}
+            setActivePage={setActivePage}
+          />
+        );
     }
   }
 
@@ -145,7 +166,13 @@ export default function UserDashboard() {
     <div className="Dashboard">
       <SideBar activePage={activePage} setActivePage={setActivePage} />
       <div className="main-content">
-        <Navbar user={user} />
+        <Navbar
+          user={user}
+          bookings={bookings}
+          moviesMap={moviesMap}
+          onSearch={handleSearch}
+          onOpenProfile={() => setActivePage("profile")}
+        />
 
         <div className={`profile-and-poster ${showSidePanel ? "" : "is-full"}`}>
           {renderPage(activePage)}

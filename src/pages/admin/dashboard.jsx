@@ -1,241 +1,23 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../css/adminDashboard.css";
-
-// ---- Mock data — replace with your backend fetches ----
-const STAT_CARDS = [
-  {
-    key: "bookings",
-    label: "Total Bookings",
-    value: "12,458",
-    delta: "18.6%",
-    icon: "ticket",
-    tone: "violet",
-  },
-  {
-    key: "revenue",
-    label: "Total Revenue",
-    value: "₹28,75,850",
-    delta: "22.4%",
-    icon: "wallet",
-    tone: "green",
-  },
-  {
-    key: "users",
-    label: "Active Users",
-    value: "8,842",
-    delta: "12.8%",
-    icon: "user",
-    tone: "amber",
-  },
-  {
-    key: "movies",
-    label: "Total Movies",
-    value: "48",
-    delta: "4",
-    icon: "film",
-    tone: "pink",
-  },
-];
-
-const THEATRE_PERFORMANCE = [
-  {
-    id: 1,
-    name: "PVR Nexus",
-    city: "Hyderabad",
-    occupancy: 88,
-    revenue: "₹4,82,300",
-  },
-  { id: 2, name: "INOX", city: "Mumbai", occupancy: 76, revenue: "₹3,95,150" },
-  { id: 3, name: "PVR", city: "Chennai", occupancy: 69, revenue: "₹3,20,780" },
-  {
-    id: 4,
-    name: "INOX",
-    city: "Bangalore",
-    occupancy: 61,
-    revenue: "₹2,75,430",
-  },
-  { id: 5, name: "PVR", city: "Delhi", occupancy: 54, revenue: "₹2,40,900" },
-];
-
-const TOP_MOVIES = [
-  {
-    id: 1,
-    title: "Kalki 2898 AD",
-    bookings: "2,458 Bookings",
-    revenue: "₹6,25,430",
-    poster:
-      "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=200&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    title: "Mission: Impossible – Dead Reckoning",
-    bookings: "1,865 Bookings",
-    revenue: "₹4,35,250",
-    poster:
-      "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=200&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    title: "Garudan",
-    bookings: "1,456 Bookings",
-    revenue: "₹3,25,890",
-    poster:
-      "https://images.unsplash.com/photo-1533928298208-27ff66555d8d?q=80&w=200&auto=format&fit=crop",
-  },
-  {
-    id: 4,
-    title: "Furiosa: A Mad Max Saga",
-    bookings: "1,125 Bookings",
-    revenue: "₹2,85,630",
-    poster:
-      "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=200&auto=format&fit=crop",
-  },
-  {
-    id: 5,
-    title: "Jawan",
-    bookings: "1,024 Bookings",
-    revenue: "₹2,45,760",
-    poster:
-      "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=200&auto=format&fit=crop",
-  },
-];
-
-const TODAY_SUMMARY = [
-  {
-    key: "bookings",
-    label: "Bookings",
-    value: "1,256",
-    delta: "15.3%",
-    icon: "ticket",
-    tone: "violet",
-  },
-  {
-    key: "revenue",
-    label: "Revenue",
-    value: "₹3,25,450",
-    delta: "18.7%",
-    icon: "wallet",
-    tone: "green",
-  },
-  {
-    key: "users",
-    label: "New Users",
-    value: "342",
-    delta: "12.1%",
-    icon: "user",
-    tone: "amber",
-  },
-  {
-    key: "shows",
-    label: "Shows",
-    value: "32",
-    delta: "6.3%",
-    icon: "monitor",
-    tone: "blue",
-  },
-  {
-    key: "occupancy",
-    label: "Occupancy",
-    value: "72%",
-    delta: "8.4%",
-    icon: "chart",
-    tone: "pink",
-  },
-];
-
-const RECENT_BOOKINGS = [
-  {
-    id: "BK10245",
-    movie: "Kalki 2898 AD",
-    show: "PVR Nexus, Hyd",
-    seats: "A10, A11",
-    amount: "₹480",
-    status: "Confirmed",
-  },
-  {
-    id: "BK10244",
-    movie: "Mission: Impossible",
-    show: "INOX, Mumbai",
-    seats: "B5, B6, B7",
-    amount: "₹1,050",
-    status: "Confirmed",
-  },
-  {
-    id: "BK10243",
-    movie: "Garudan",
-    show: "PVR, Chennai",
-    seats: "C12, C13",
-    amount: "₹560",
-    status: "Confirmed",
-  },
-  {
-    id: "BK10242",
-    movie: "Furiosa",
-    show: "INOX, Bangalore",
-    seats: "D8, D9",
-    amount: "₹460",
-    status: "Pending",
-  },
-  {
-    id: "BK10241",
-    movie: "Jawan",
-    show: "PVR, Delhi",
-    seats: "E15, E16",
-    amount: "₹520",
-    status: "Confirmed",
-  },
-];
-
-const OCCUPANCY_SEGMENTS = [
-  { label: "0 - 25%", count: 12, color: "#17a673" },
-  { label: "25 - 50%", count: 18, color: "#f0a83b" },
-  { label: "50 - 75%", count: 24, color: "#f0c93b" },
-  { label: "75 - 100%", count: 10, color: "#e05260" },
-];
-
-const UPCOMING_SHOWS = [
-  {
-    id: 1,
-    title: "Kalki 2898 AD",
-    venue: "PVR Nexus, Hyderabad",
-    time: "Today, 6:30 PM",
-    filled: 45,
-    poster: TOP_MOVIES[0].poster,
-  },
-  {
-    id: 2,
-    title: "Mission: Impossible",
-    venue: "INOX, Mumbai",
-    time: "Today, 7:15 PM",
-    filled: 78,
-    poster: TOP_MOVIES[1].poster,
-  },
-  {
-    id: 3,
-    title: "Garudan",
-    venue: "PVR, Chennai",
-    time: "Today, 9:30 PM",
-    filled: 92,
-    poster: TOP_MOVIES[2].poster,
-  },
-  {
-    id: 4,
-    title: "Furiosa",
-    venue: "INOX, Bangalore",
-    time: "Tomorrow, 5:45 PM",
-    filled: 35,
-    poster: TOP_MOVIES[3].poster,
-  },
-];
+import Icon from "./components/icon";
+import ComingSoon from "./components/comingSoon";
+import MoviesPanel from "./components/moviesPanel";
+import MovieFormModal from "./components/movieFormModal";
+import { useAuth } from "../../context/authContext";
+import { getListedMovies } from "../../services/adminService";
+import { createMovie, updateMovie, deleteMovie } from "../../services/movieService";
+import { logout } from "../../services/authService";
+import { formatDate, formatShowTime, timeAgo } from "../../utils/format";
+import Loading from "../loading";
 
 const NAV_SECTIONS = [
   {
     label: "Movie Management",
     items: [
       { key: "movies", label: "Movies", icon: "film" },
-      { key: "shows", label: "Shows", icon: "clapper" },
       { key: "screens", label: "Screens", icon: "grid" },
-      { key: "seats", label: "Seat Layouts", icon: "layout" },
       { key: "categories", label: "Categories", icon: "tag" },
       { key: "languages", label: "Languages", icon: "globe" },
     ],
@@ -257,10 +39,7 @@ const NAV_SECTIONS = [
   },
   {
     label: "Marketing",
-    items: [
-      { key: "coupons", label: "Coupons", icon: "percent" },
-      { key: "notifications", label: "Notifications", icon: "bell" },
-    ],
+    items: [{ key: "coupons", label: "Coupons", icon: "percent" }],
   },
   {
     label: "Analytics",
@@ -278,176 +57,422 @@ const NAV_SECTIONS = [
   },
 ];
 
-function Icon({ name, size = 18 }) {
-  const c = {
-    width: size,
-    height: size,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-  };
-  const p = {
-    dashboard: <path d="M3 3h8v8H3zM13 3h8v5h-8zM13 12h8v9h-8zM3 15h8v6H3z" />,
-    film: (
-      <>
-        <rect x="2.5" y="4" width="19" height="16" rx="2" />
-        <path d="M7 4v16M17 4v16M2.5 9h4.5M17 9h4.5M2.5 15h4.5M17 15h4.5" />
-      </>
-    ),
-    clapper: (
-      <>
-        <path d="M3 9.5 5 4h3l-2 5.5M9 9.5 11 4h3l-2 5.5M15 9.5 17 4h3l-2 5.5" />
-        <rect x="3" y="9.5" width="18" height="10.5" rx="1.5" />
-      </>
-    ),
-    grid: (
-      <>
-        <rect x="3" y="3" width="8" height="8" rx="1.5" />
-        <rect x="13" y="3" width="8" height="8" rx="1.5" />
-        <rect x="3" y="13" width="8" height="8" rx="1.5" />
-        <rect x="13" y="13" width="8" height="8" rx="1.5" />
-      </>
-    ),
-    layout: (
-      <>
-        <rect x="3" y="4" width="18" height="16" rx="2" />
-        <path d="M3 9h18" />
-      </>
-    ),
-    tag: (
-      <>
-        <path d="M20.5 12.6 12 21.1 2.9 12 11.4 3.5H20a.5.5 0 0 1 .5.5v8.6Z" />
-        <circle cx="16" cy="8" r="1.3" />
-      </>
-    ),
-    globe: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18Z" />
-      </>
-    ),
-    clipboard: (
-      <>
-        <rect x="5" y="4" width="14" height="17" rx="2" />
-        <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M8 11h8M8 15h5" />
-      </>
-    ),
-    wallet: (
-      <>
-        <path d="M3 7a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
-        <path d="M16 12h3" />
-      </>
-    ),
-    refund: (
-      <>
-        <path d="M3 12a9 9 0 1 0 3-6.7" />
-        <path d="M3 3v5h5" />
-      </>
-    ),
-    user: (
-      <>
-        <circle cx="12" cy="8" r="3.5" />
-        <path d="M4.5 20.5a7.5 7.5 0 0 1 15 0" />
-      </>
-    ),
-    shield: (
-      <path d="M12 2.5 20 6v6c0 5-3.4 8.4-8 9.5-4.6-1.1-8-4.5-8-9.5V6Z" />
-    ),
-    percent: (
-      <>
-        <circle cx="7" cy="7" r="2.3" />
-        <circle cx="17" cy="17" r="2.3" />
-        <path d="M18 6 6 18" />
-      </>
-    ),
-    bell: (
-      <>
-        <path d="M6 8a6 6 0 1 1 12 0c0 4.5 1.5 6 1.5 6h-15S6 12.5 6 8Z" />
-        <path d="M10 19a2 2 0 0 0 4 0" />
-      </>
-    ),
-    chart: (
-      <>
-        <path d="M4 20V10M11 20V4M18 20v-7" />
-        <path d="M2 20h20" />
-      </>
-    ),
-    trend: (
-      <>
-        <path d="m3 17 6-6 4 4 8-8" />
-        <path d="M15 7h6v6" />
-      </>
-    ),
-    settings: (
-      <>
-        <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V20a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.4 1Z" />
-      </>
-    ),
-    file: (
-      <>
-        <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
-        <path d="M14 3v5h5M9 13h6M9 17h6" />
-      </>
-    ),
-    monitor: (
-      <>
-        <rect x="3" y="4" width="18" height="12" rx="2" />
-        <path d="M8 20h8M12 16v4" />
-      </>
-    ),
-    menu: <path d="M4 6h16M4 12h16M4 18h16" />,
-    calendar: (
-      <>
-        <rect x="3" y="4.5" width="18" height="16" rx="2" />
-        <path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
-      </>
-    ),
-    chevron: <path d="m6 9 6 6 6-6" />,
-    megaphone: (
-      <>
-        <path d="M3 11v2a2 2 0 0 0 2 2h1l1 5h2l-1-5h2l8 4V6l-8 4H6a2 2 0 0 0-2 2Z" />
-        <path d="M19 8a4 4 0 0 1 0 8" />
-      </>
-    ),
-    close: <path d="M18 6 6 18M6 6l12 12" />,
-    "arrow-up": <path d="m18 15-6-6-6 6" />,
-    ticket: (
-      <>
-        <path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4Z" />
-        <path d="M10 6v2M10 11v2M10 16v2" />
-      </>
-    ),
-    building: (
-      <>
-        <rect x="4" y="3" width="16" height="18" rx="1.5" />
-        <path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2" />
-      </>
-    ),
-  };
-  return <svg {...c}>{p[name]}</svg>;
+const SECTION_LABELS = NAV_SECTIONS.flatMap((s) => s.items).reduce((map, item) => {
+  map[item.key] = { label: item.label, icon: item.icon };
+  return map;
+}, {});
+
+function buildAdminNotifications(movies = []) {
+  const items = [];
+  const now = Date.now();
+
+  movies.forEach((movie) => {
+    if (movie.createdAt) {
+      const ageHrs = (now - new Date(movie.createdAt).getTime()) / 3600000;
+      if (ageHrs <= 72) {
+        items.push({
+          id: `${movie._id}-added`,
+          icon: "film",
+          text: `"${movie.title}" was added to your listings`,
+          time: movie.createdAt,
+        });
+      }
+    }
+
+    (movie.shows || []).forEach((show) => {
+      if (show.totalSeats > 0 && show.availableSeats === 0) {
+        items.push({
+          id: `${movie._id}-${show._id}-soldout`,
+          icon: "ticket",
+          text: `"${movie.title}" is sold out for ${formatDate(show.date)}, ${formatShowTime(show.showTime)}`,
+          time: movie.createdAt,
+          priority: true,
+        });
+      }
+    });
+  });
+
+  items.sort((a, b) => {
+    if (!!b.priority !== !!a.priority) return b.priority ? 1 : -1;
+    return new Date(b.time || 0) - new Date(a.time || 0);
+  });
+
+  return items.slice(0, 8);
 }
 
 export default function AdminDashboard() {
-  const [showBanner, setShowBanner] = useState(true);
-  const occupancyTotal = OCCUPANCY_SEGMENTS.reduce(
-    (sum, s) => sum + s.count,
-    0,
-  );
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
+  const [activePage, setActivePage] = useState("dashboard");
+  const [movies, setMovies] = useState([]);
+  const [moviesLoading, setMoviesLoading] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingMovie, setEditingMovie] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [seenCount, setSeenCount] = useState(0);
+  const [query, setQuery] = useState("");
+  const [banner, setBanner] = useState(null);
+  const notifRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setNotifOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const fetchMovies = useCallback(async () => {
+    setMoviesLoading(true);
+    try {
+      const data = await getListedMovies();
+      setMovies(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setMoviesLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
+
+  const notifications = useMemo(() => buildAdminNotifications(movies), [movies]);
+  const unseenCount = Math.max(notifications.length - seenCount, 0);
+
+  const stats = useMemo(() => {
+    const allShows = movies.flatMap((m) => m.shows || []);
+    const totalSeats = allShows.reduce((sum, s) => sum + (s.totalSeats || 0), 0);
+    const occupiedSeats = allShows.reduce((sum, s) => sum + (s.occupiedSeats || 0), 0);
+    const occupancyPct = totalSeats ? Math.round((occupiedSeats / totalSeats) * 100) : 0;
+    const estRevenue = movies.reduce((sum, m) => {
+      const occ = (m.shows || []).reduce((s2, sh) => s2 + (sh.occupiedSeats || 0), 0);
+      return sum + occ * (m.price || 0);
+    }, 0);
+
+    return {
+      movies: movies.length,
+      shows: allShows.length,
+      totalSeats,
+      occupiedSeats,
+      occupancyPct,
+      estRevenue,
+    };
+  }, [movies]);
+
+  const occupancyBuckets = useMemo(() => {
+    const buckets = [
+      { label: "0 - 25%", count: 0, color: "#17a673" },
+      { label: "25 - 50%", count: 0, color: "#f0c93b" },
+      { label: "50 - 75%", count: 0, color: "#f0a83b" },
+      { label: "75 - 100%", count: 0, color: "#e05260" },
+    ];
+    movies.forEach((m) => {
+      (m.shows || []).forEach((s) => {
+        if (!s.totalSeats) return;
+        const pct = (s.occupiedSeats / s.totalSeats) * 100;
+        if (pct < 25) buckets[0].count++;
+        else if (pct < 50) buckets[1].count++;
+        else if (pct < 75) buckets[2].count++;
+        else buckets[3].count++;
+      });
+    });
+    return buckets;
+  }, [movies]);
+
+  const bucketTotal = occupancyBuckets.reduce((s, b) => s + b.count, 0) || 1;
   const radius = 62;
   const circumference = 2 * Math.PI * radius;
   let offsetSoFar = 0;
-  const donutSegments = OCCUPANCY_SEGMENTS.map((seg) => {
-    const fraction = seg.count / occupancyTotal;
+  const donutSegments = occupancyBuckets.map((seg) => {
+    const fraction = seg.count / bucketTotal;
     const dash = fraction * circumference;
     const segment = { ...seg, dash, offset: offsetSoFar };
     offsetSoFar += dash;
     return segment;
   });
+
+  const topMovies = useMemo(() => {
+    return [...movies]
+      .map((m) => {
+        const occ = (m.shows || []).reduce((s, sh) => s + (sh.occupiedSeats || 0), 0);
+        const total = (m.shows || []).reduce((s, sh) => s + (sh.totalSeats || 0), 0);
+        return { movie: m, occupied: occ, pct: total ? Math.round((occ / total) * 100) : 0 };
+      })
+      .sort((a, b) => b.occupied - a.occupied)
+      .slice(0, 5);
+  }, [movies]);
+
+  const upcomingShows = useMemo(() => {
+    const now = Date.now();
+    const list = [];
+    movies.forEach((m) => {
+      (m.shows || []).forEach((s) => {
+        const dt = new Date(`${s.date}T${s.showTime || "00:00"}`).getTime();
+        if (!Number.isNaN(dt) && dt >= now) {
+          list.push({ movie: m, show: s, dt });
+        }
+      });
+    });
+    return list.sort((a, b) => a.dt - b.dt).slice(0, 5);
+  }, [movies]);
+
+  function toggleNotifications() {
+    setNotifOpen((open) => {
+      const next = !open;
+      if (next) setSeenCount(notifications.length);
+      return next;
+    });
+  }
+
+  function openCreate() {
+    setEditingMovie(null);
+    setFormOpen(true);
+  }
+
+  function openEdit(movie) {
+    setEditingMovie(movie);
+    setFormOpen(true);
+  }
+
+  async function handleFormSubmit(payload) {
+    setSaving(true);
+    try {
+      if (editingMovie) {
+        await updateMovie(editingMovie._id, payload);
+        setBanner({ type: "success", text: `"${payload.title}" updated.` });
+      } else {
+        await createMovie(payload);
+        setBanner({ type: "success", text: `"${payload.title}" created.` });
+      }
+      setFormOpen(false);
+      setEditingMovie(null);
+      await fetchMovies();
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete(movie) {
+    if (!window.confirm(`Delete "${movie.title}"? This can't be undone.`)) return;
+    setDeletingId(movie._id);
+    try {
+      await deleteMovie(movie._id);
+      setBanner({ type: "success", text: `"${movie.title}" deleted.` });
+      await fetchMovies();
+    } catch (err) {
+      setBanner({
+        type: "error",
+        text: err.response?.data?.message || "Could not delete this movie.",
+      });
+    } finally {
+      setDeletingId(null);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await logout("admin");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      navigate("/admin/login");
+    }
+  }
+
+  function renderPage() {
+    if (activePage === "movies") {
+      return (
+        <MoviesPanel
+          movies={movies}
+          loading={moviesLoading}
+          onCreate={openCreate}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+          deletingId={deletingId}
+          initialQuery={query}
+        />
+      );
+    }
+
+    if (activePage !== "dashboard") {
+      const meta = SECTION_LABELS[activePage] || { label: "Coming Soon", icon: "settings" };
+      return <ComingSoon label={meta.label} icon={meta.icon} />;
+    }
+
+    return (
+      <>
+        <div className="stat-row">
+          <div className="stat-card">
+            <span className="stat-icon tone-violet">
+              <Icon name="film" size={19} />
+            </span>
+            <p className="stat-label">Total Movies</p>
+            <p className="stat-value">{stats.movies}</p>
+            <p className="stat-delta">
+              <span>listed under your account</span>
+            </p>
+          </div>
+          <div className="stat-card">
+            <span className="stat-icon tone-blue">
+              <Icon name="monitor" size={19} />
+            </span>
+            <p className="stat-label">Total Shows</p>
+            <p className="stat-value">{stats.shows}</p>
+            <p className="stat-delta">
+              <span>across all your movies</span>
+            </p>
+          </div>
+          <div className="stat-card">
+            <span className="stat-icon tone-amber">
+              <Icon name="grid" size={19} />
+            </span>
+            <p className="stat-label">Seats Filled</p>
+            <p className="stat-value">{stats.occupancyPct}%</p>
+            <p className="stat-delta">
+              <span>
+                {stats.occupiedSeats} of {stats.totalSeats} seats
+              </span>
+            </p>
+          </div>
+          <div className="stat-card">
+            <span className="stat-icon tone-green">
+              <Icon name="wallet" size={19} />
+            </span>
+            <p className="stat-label">Estimated Revenue</p>
+            <p className="stat-value">₹{stats.estRevenue.toLocaleString("en-IN")}</p>
+            <p className="stat-delta">
+              <span>from confirmed seats · rough estimate</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="row-3col">
+          <section className="panel">
+            <div className="panel-head">
+              <div>
+                <h2>Top Movies</h2>
+                <p className="panel-subtitle">Ranked by seats booked</p>
+              </div>
+            </div>
+            {topMovies.length === 0 ? (
+              <p className="admin-panel-empty">No shows yet — add a movie to see it here.</p>
+            ) : (
+              <ul className="movie-list">
+                {topMovies.map(({ movie, occupied, pct }) => (
+                  <li key={movie._id}>
+                    <span
+                      className="admin-movie-thumb admin-movie-thumb-sm"
+                      style={{ background: "linear-gradient(135deg, var(--primary), var(--accent))" }}
+                    >
+                      {movie.title?.[0] || "?"}
+                    </span>
+                    <div>
+                      <p className="movie-title">{movie.title}</p>
+                      <p className="movie-sub">{occupied} seats booked</p>
+                    </div>
+                    <span className="movie-revenue">{pct}%</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section className="panel occupancy-panel">
+            <div className="panel-head">
+              <h2>Show Occupancy</h2>
+            </div>
+            <div className="donut-wrap">
+              <svg viewBox="0 0 160 160" className="donut-svg">
+                {donutSegments.map((seg) => (
+                  <circle
+                    key={seg.label}
+                    cx="80"
+                    cy="80"
+                    r={radius}
+                    fill="none"
+                    stroke={seg.color}
+                    strokeWidth="20"
+                    strokeDasharray={`${seg.dash} ${circumference - seg.dash}`}
+                    strokeDashoffset={-seg.offset}
+                    transform="rotate(-90 80 80)"
+                  />
+                ))}
+              </svg>
+              <div className="donut-center">
+                <p className="donut-value">{stats.occupancyPct}%</p>
+                <p className="donut-label">Average Occupancy</p>
+              </div>
+            </div>
+            <ul className="occupancy-legend">
+              {occupancyBuckets.map((s) => (
+                <li key={s.label}>
+                  <i className="dot" style={{ background: s.color }} />
+                  {s.label}
+                  <span>{s.count}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="panel">
+            <div className="panel-head">
+              <h2>Upcoming Shows</h2>
+            </div>
+            {upcomingShows.length === 0 ? (
+              <p className="admin-panel-empty">No upcoming shows scheduled.</p>
+            ) : (
+              <ul className="upcoming-list">
+                {upcomingShows.map(({ movie, show }) => (
+                  <li key={show._id}>
+                    <span
+                      className="admin-movie-thumb admin-movie-thumb-sm"
+                      style={{ background: "linear-gradient(135deg, var(--primary), var(--accent))" }}
+                    >
+                      {movie.title?.[0] || "?"}
+                    </span>
+                    <div>
+                      <p className="upcoming-title">{movie.title}</p>
+                      <p className="upcoming-sub">Screen {show.screen}</p>
+                      <p className="upcoming-time">
+                        {formatDate(show.date)} · {formatShowTime(show.showTime)}
+                      </p>
+                    </div>
+                    <span className="fill-badge fill-amber">
+                      {show.totalSeats
+                        ? Math.round((show.occupiedSeats / show.totalSeats) * 100)
+                        : 0}
+                      % Filled
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+
+        <MoviesPanel
+          movies={movies}
+          loading={moviesLoading}
+          onCreate={openCreate}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+          deletingId={deletingId}
+          initialQuery={query}
+        />
+      </>
+    );
+  }
+
+  if (!user) {
+    return <Loading />;
+  }
 
   return (
     <div className="AdminDashboard">
@@ -464,34 +489,41 @@ export default function AdminDashboard() {
         </div>
 
         <nav className="admin-nav">
-          <a className="admin-link is-active" href="#">
+          <button
+            className={`admin-link ${activePage === "dashboard" ? "is-active" : ""}`}
+            onClick={() => setActivePage("dashboard")}
+          >
             <Icon name="dashboard" size={18} />
             Dashboard
-          </a>
+          </button>
 
           {NAV_SECTIONS.map((section) => (
             <div className="admin-group" key={section.label}>
               <p className="admin-group-label">{section.label}</p>
               {section.items.map((item) => (
-                <a className="admin-link" href="#" key={item.key}>
+                <button
+                  className={`admin-link ${activePage === item.key ? "is-active" : ""}`}
+                  key={item.key}
+                  onClick={() => setActivePage(item.key)}
+                >
                   <Icon name={item.icon} size={18} />
                   {item.label}
-                </a>
+                </button>
               ))}
             </div>
           ))}
         </nav>
 
-        <div className="admin-account">
+        <button className="admin-account admin-account-btn" onClick={handleLogout}>
           <div className="admin-account-avatar">
             <Icon name="user" size={18} />
           </div>
           <div>
-            <p className="admin-account-name">Admin User</p>
-            <p className="admin-account-role">Super Admin</p>
+            <p className="admin-account-name">{user?.name || "Admin"}</p>
+            <p className="admin-account-role">Log out</p>
           </div>
-          <Icon name="chevron" size={16} />
-        </div>
+          <Icon name="logout" size={16} />
+        </button>
       </aside>
 
       {/* ---------------- MAIN ---------------- */}
@@ -501,21 +533,57 @@ export default function AdminDashboard() {
             <Icon name="menu" size={20} />
           </button>
           <div className="admin-heading">
-            <h1>Dashboard</h1>
-            <p>
-              Welcome back, Admin! Here's what's happening with your cinema
-              today.
-            </p>
+            <h1>{activePage === "dashboard" ? "Dashboard" : SECTION_LABELS[activePage]?.label || "Dashboard"}</h1>
+            <p>Welcome back, {user?.name?.split(" ")[0] || "Admin"}! Here's what's happening with your listings.</p>
           </div>
+
+          <div className="admin-search admin-topbar-search">
+            <Icon name="search" size={15} />
+            <input
+              type="text"
+              placeholder="Search your movies..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") setActivePage("movies");
+              }}
+            />
+          </div>
+
           <div className="admin-topbar-actions">
-            <button className="admin-daterange">
-              <Icon name="calendar" size={16} />
-              30 May – 5 Jun 2025
-            </button>
-            <button className="admin-bell" aria-label="Notifications">
-              <Icon name="bell" size={19} />
-              <span className="admin-badge">5</span>
-            </button>
+            <div className="admin-notif-wrap" ref={notifRef}>
+              <button className="admin-bell" aria-label="Notifications" onClick={toggleNotifications}>
+                <Icon name="bell" size={19} />
+                {unseenCount > 0 && (
+                  <span className="admin-badge">{unseenCount > 9 ? "9+" : unseenCount}</span>
+                )}
+              </button>
+              {notifOpen && (
+                <div className="admin-notif-panel">
+                  <div className="admin-notif-head">Notifications</div>
+                  {notifications.length === 0 ? (
+                    <div className="admin-notif-empty">
+                      <Icon name="inbox" size={22} />
+                      <p>Nothing to show right now.</p>
+                    </div>
+                  ) : (
+                    <ul className="admin-notif-list">
+                      {notifications.map((n) => (
+                        <li key={n.id}>
+                          <span className="admin-notif-icon">
+                            <Icon name={n.icon} size={14} />
+                          </span>
+                          <span>
+                            <span className="admin-notif-text">{n.text}</span>
+                            <span className="admin-notif-time">{timeAgo(n.time)}</span>
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
             <button className="admin-avatar-btn">
               <img
                 src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200&auto=format&fit=crop"
@@ -527,240 +595,30 @@ export default function AdminDashboard() {
         </header>
 
         <div className="admin-content">
-          {/* ---- STAT CARDS ---- */}
-          <div className="stat-row">
-            {STAT_CARDS.map((s) => (
-              <div className="stat-card" key={s.key}>
-                <span className={`stat-icon tone-${s.tone}`}>
-                  <Icon name={s.icon} size={19} />
-                </span>
-                <p className="stat-label">{s.label}</p>
-                <p className="stat-value">{s.value}</p>
-                <p className="stat-delta">
-                  <Icon name="arrow-up" size={12} /> {s.delta}{" "}
-                  <span>vs last week</span>
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* ---- THEATRE PERFORMANCE / TOP MOVIES / TODAY SUMMARY ---- */}
-          <div className="row-3col">
-            <section className="panel theatre-panel">
-              <div className="panel-head">
-                <div>
-                  <h2>Theatre Performance</h2>
-                  <p className="panel-subtitle">
-                    Ranked by occupancy this week
-                  </p>
-                </div>
-                <a className="panel-link" href="#">
-                  View All
-                </a>
-              </div>
-
-              <ul className="theatre-list">
-                {THEATRE_PERFORMANCE.map((t, i) => (
-                  <li key={t.id}>
-                    <span className="theatre-rank">{i + 1}</span>
-                    <div className="theatre-info">
-                      <div className="theatre-info-top">
-                        <p className="theatre-name">
-                          <Icon name="building" size={14} /> {t.name}, {t.city}
-                        </p>
-                        <span className="theatre-revenue">{t.revenue}</span>
-                      </div>
-                      <div className="theatre-bar-track">
-                        <div
-                          className="theatre-bar-fill"
-                          style={{ width: `${t.occupancy}%` }}
-                        />
-                      </div>
-                    </div>
-                    <span className="theatre-pct">{t.occupancy}%</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="panel">
-              <div className="panel-head">
-                <h2>Top Movies</h2>
-                <a className="panel-link" href="#">
-                  View All
-                </a>
-              </div>
-              <ul className="movie-list">
-                {TOP_MOVIES.map((m) => (
-                  <li key={m.id}>
-                    <img src={m.poster} alt={m.title} />
-                    <div>
-                      <p className="movie-title">{m.title}</p>
-                      <p className="movie-sub">{m.bookings}</p>
-                    </div>
-                    <span className="movie-revenue">{m.revenue}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="panel">
-              <div className="panel-head">
-                <h2>Today's Summary</h2>
-              </div>
-              <ul className="summary-list">
-                {TODAY_SUMMARY.map((s) => (
-                  <li key={s.key}>
-                    <span className={`stat-icon stat-icon-sm tone-${s.tone}`}>
-                      <Icon name={s.icon} size={16} />
-                    </span>
-                    <div>
-                      <p className="summary-label">{s.label}</p>
-                      <p className="summary-value">{s.value}</p>
-                    </div>
-                    <span className="summary-delta">
-                      <Icon name="arrow-up" size={11} /> {s.delta}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </div>
-
-          {/* ---- BOOKINGS TABLE / OCCUPANCY / UPCOMING ---- */}
-          <div className="row-3col row-3col-alt">
-            <section className="panel">
-              <div className="panel-head">
-                <h2>Recent Bookings</h2>
-                <a className="panel-link" href="#">
-                  View All
-                </a>
-              </div>
-              <table className="bookings-table">
-                <thead>
-                  <tr>
-                    <th>Booking ID</th>
-                    <th>Movie</th>
-                    <th>Show</th>
-                    <th>Seats</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {RECENT_BOOKINGS.map((b) => (
-                    <tr key={b.id}>
-                      <td className="mono">{b.id}</td>
-                      <td>{b.movie}</td>
-                      <td>{b.show}</td>
-                      <td>{b.seats}</td>
-                      <td>{b.amount}</td>
-                      <td>
-                        <span
-                          className={`status-badge status-${b.status.toLowerCase()}`}
-                        >
-                          {b.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
-
-            <section className="panel occupancy-panel">
-              <div className="panel-head">
-                <h2>Show Occupancy</h2>
-                <a className="panel-link" href="#">
-                  View All
-                </a>
-              </div>
-              <div className="donut-wrap">
-                <svg viewBox="0 0 160 160" className="donut-svg">
-                  {donutSegments.map((seg) => (
-                    <circle
-                      key={seg.label}
-                      cx="80"
-                      cy="80"
-                      r={radius}
-                      fill="none"
-                      stroke={seg.color}
-                      strokeWidth="20"
-                      strokeDasharray={`${seg.dash} ${circumference - seg.dash}`}
-                      strokeDashoffset={-seg.offset}
-                      transform="rotate(-90 80 80)"
-                    />
-                  ))}
-                </svg>
-                <div className="donut-center">
-                  <p className="donut-value">72%</p>
-                  <p className="donut-label">Average Occupancy</p>
-                </div>
-              </div>
-              <ul className="occupancy-legend">
-                {OCCUPANCY_SEGMENTS.map((s) => (
-                  <li key={s.label}>
-                    <i className="dot" style={{ background: s.color }} />
-                    {s.label}
-                    <span>{s.count}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="panel">
-              <div className="panel-head">
-                <h2>Upcoming Shows</h2>
-                <a className="panel-link" href="#">
-                  View All
-                </a>
-              </div>
-              <ul className="upcoming-list">
-                {UPCOMING_SHOWS.map((s) => {
-                  const tone =
-                    s.filled >= 75 ? "red" : s.filled >= 50 ? "amber" : "green";
-                  return (
-                    <li key={s.id}>
-                      <img src={s.poster} alt={s.title} />
-                      <div>
-                        <p className="upcoming-title">{s.title}</p>
-                        <p className="upcoming-sub">{s.venue}</p>
-                        <p className="upcoming-time">{s.time}</p>
-                      </div>
-                      <span className={`fill-badge fill-${tone}`}>
-                        {s.filled}% Filled
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          </div>
-
-          {/* ---- SYSTEM BANNER ---- */}
-          {showBanner && (
-            <div className="system-banner">
-              <span className="system-banner-icon">
-                <Icon name="megaphone" size={18} />
-              </span>
-              <div>
-                <strong>System Update</strong>
-                <p>
-                  Upcoming maintenance on 10th June 2025 from 2:00 AM – 4:00 AM.
-                  Some services may be unavailable.
-                </p>
-              </div>
-              <button
-                className="system-banner-close"
-                onClick={() => setShowBanner(false)}
-                aria-label="Dismiss"
-              >
-                <Icon name="close" size={16} />
+          {banner && (
+            <div className={`admin-inline-banner admin-inline-banner-${banner.type}`}>
+              <span>{banner.text}</span>
+              <button onClick={() => setBanner(null)} aria-label="Dismiss">
+                <Icon name="close" size={14} />
               </button>
             </div>
           )}
+
+          {renderPage()}
         </div>
       </div>
+
+      {formOpen && (
+        <MovieFormModal
+          movie={editingMovie}
+          saving={saving}
+          onClose={() => {
+            setFormOpen(false);
+            setEditingMovie(null);
+          }}
+          onSubmit={handleFormSubmit}
+        />
+      )}
     </div>
   );
 }

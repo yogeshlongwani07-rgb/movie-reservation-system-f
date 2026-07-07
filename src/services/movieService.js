@@ -34,4 +34,34 @@ async function bookSeats(movieId, showId, seatNumbers) {
   return response.data;
 }
 
-export { getMovies, getMovieShows, getShow, holdSeats, bookSeats };
+// POST /movie/create  (admin only) body: { title, description, language, duration, rating, price, shows: [...] }
+async function createMovie(payload) {
+  const response = await api.post("/movie/create", payload);
+  return response.data;
+}
+
+// PUT /movie/update/:id (admin only, own movies) — NOTE: the backend replaces
+// whatever fields you send as-is. Avoid sending `shows` here: unlike /create,
+// update does not regenerate the seat map, so it's only safe to patch the
+// plain fields (title, description, language, duration, rating, price).
+async function updateMovie(id, payload) {
+  const response = await api.put(`/movie/update/${id}`, payload);
+  return response.data;
+}
+
+// DELETE /movie/delete/:id (admin only, own movies)
+async function deleteMovie(id) {
+  const response = await api.delete(`/movie/delete/${id}`);
+  return response.data;
+}
+
+export {
+  getMovies,
+  getMovieShows,
+  getShow,
+  holdSeats,
+  bookSeats,
+  createMovie,
+  updateMovie,
+  deleteMovie,
+};

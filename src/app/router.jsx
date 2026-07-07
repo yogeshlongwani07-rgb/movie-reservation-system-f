@@ -19,9 +19,9 @@ export default function Router() {
           <Route
             path="/admin/dashboard"
             element={
-              // <ProtectedRoute role="admin">
-              <AdminDashboard />
-              // </ProtectedRoute>
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
             }
           ></Route>
 
