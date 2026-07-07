@@ -6,6 +6,9 @@ import UserSignup from "../pages/auth/user/signup";
 import NotFound from "../pages/NotFound";
 import AdminDashboard from "../pages/admin/dashboard";
 import UserDashboard from "../pages/user/dashboard/index";
+import Movies from "../pages/user/movie-discovery/movies";
+import Shows from "../pages/user/movie-discovery/shows";
+import SeatSelection from "../pages/user/movie-discovery/seatSelection";
 import ProtectedRoute from "../routes/protectedRoute";
 import { AuthProvider } from "../context/authContext";
 
@@ -32,6 +35,31 @@ export default function Router() {
             element={
               <ProtectedRoute role="user">
                 <UserDashboard />
+              </ProtectedRoute>
+            }
+          ></Route>
+
+          <Route
+            path="/user/movies"
+            element={
+              <ProtectedRoute role="user">
+                <Movies />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/user/movie/:movieId/shows"
+            element={
+              <ProtectedRoute role="user">
+                <Shows />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/user/movie/:movieId/show/:showId/seats"
+            element={
+              <ProtectedRoute role="user">
+                <SeatSelection />
               </ProtectedRoute>
             }
           ></Route>
